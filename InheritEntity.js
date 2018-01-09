@@ -11,7 +11,7 @@ function Entity(x, y){
 //cria uma vez e nunca mais cria.
 Entity.prototype.update = function(){
 	areaJogo.ctx.fillStyle = this.Color;	
-	areaJogo.ctx.fillRect(this.X, this.Y, this.Width, this.Height); 
+	areaJogo.ctx.fillRect(this.X-1, this.Y-1, this.Width+1, this.Height+1); 
 };
 
 
@@ -63,6 +63,8 @@ function JogadorCauda(x, y, color, speedX, speedY){
 
 	this.OldSpeedX=speedX;
 	this.OldSpeedY=speedY;
+	this.StopSpeedX=0;
+	this.StopSpeedY=0;
 	this.SpeedX=speedX;
 	this.SpeedY=speedY;
 }
@@ -72,8 +74,6 @@ JogadorCauda.prototype.constructor = JogadorCauda;
 
 JogadorCauda.prototype.novaPos = function(){
 	this.X+=this.SpeedX; this.Y+=this.SpeedY;
-
-	console.log(this.SpeedX);
 };
 
 function Comestivel(x, y, type){
@@ -89,6 +89,5 @@ Comestivel.prototype= Object.create(Entity.prototype);
 Comestivel.prototype.constructor=JogadorBloco;
 
 Comestivel.prototype.delete = function(){
-	console.log("g");
 	this.Type=null;
 };

@@ -7,7 +7,9 @@ img.src="6da17dc320f06b1a191f6d3270ba8a4b--oreos-online-games.jpg";*/
 var tamJogador = [];
 var gridX=30;
 var gridY=30;
+var caudasNasc=0;
 var c;
+var origFrame;
 
 function startup(){
 	areaJogo.start();
@@ -61,7 +63,7 @@ function updateArea(){
 	areaJogo.clear();
 	areaJogo.cntFrame++;
 
-	//Fazer o background, deixando 85% (altura) do ecra livre para a cena de jogo, e 20 espacos para o jogador mover(4.25% de altura cada espaço).
+	//Fazer o background, e 140 pixeis para as tabelas em cima
 	areaJogo.ctx.fillStyle= "#568929";
 	areaJogo.ctx.fillRect(0, 0, cWidth,140);
 	areaJogo.ctx.beginPath();
@@ -109,10 +111,10 @@ function updateArea(){
 		c = new Comestivel((pX)*gridX, (pY)*gridY, "Ponto");
 		setTimeout(function(){c=undefined}, 4000);
 		
-		sX=tamJogador[tamJogador.length-1].SpeedX;
-		sY=tamJogador[tamJogador.length-1].SpeedY;
+		sX=tamJogador[0].SpeedX;
+		sY=tamJogador[0].SpeedY;
 
-		if(tamJogador[tamJogador.length-1].SpeedX>0) {
+		/*if(tamJogador[tamJogador.length-1].SpeedX>0) {
 			posX=tamJogador[tamJogador.length-1].X-tamJogador[tamJogador.length-1].Width; posY=(tamJogador[tamJogador.length-1].Y)-140;
 		} else if(tamJogador[tamJogador.length-1].SpeedX<0){
 			posX=tamJogador[tamJogador.length-1].X+tamJogador[tamJogador.length-1].Width; posY=(tamJogador[tamJogador.length-1].Y)-140;
@@ -120,21 +122,41 @@ function updateArea(){
 			posX=tamJogador[tamJogador.length-1].X; posY=(tamJogador[tamJogador.length-1].Y-140)-tamJogador[tamJogador.length-1].Height;
 		} else {
 			posX=tamJogador[tamJogador.length-1].X; posY=(tamJogador[tamJogador.length-1].Y-140)+tamJogador[tamJogador.length-1].Height;
-		}
+		}*/
 
-		tamJogador.push(new JogadorCauda(posX, posY, "black", sX, sY));
+		tamJogador.splice(1, 0, new JogadorCauda(tamJogador[0].X, tamJogador[0].Y-140, "black", sX, sY));
+		for(var i = 1; i<tamJogador.length; i++) {
+			origFrame=areaJogo.cntFrame;
+			tamJogador[i].StopSpeedX=tamJogador[i].SpeedX; tamJogador[i].StopSpeedY=tamJogador[i].SpeedY;
+			tamJogador[i].SpeedX=0; tamJogador[i].SpeedY=0;	
+		}
+		caudasNasc++;
 	}
 
 	if(c!=undefined) c.update();
 	
 	tamJogador[0].novaPos();
 
+	if(caudasNasc>0){
+		console.log(areaJogo.cntFrame-origFrame)
+		if(areaJogo.cntFrame-origFrame==8){
+			caudasNasc--;
+			
+			for(var i = 1; i<tamJogador.length; i++) {
+				tamJogador[i].SpeedX=tamJogador[i].StopSpeedX; tamJogador[i].SpeedY=tamJogador[i].StopSpeedY;	
+
+			}	
+		}
+	}
+
 	for(var i = 1; i<tamJogador.length; i++) {
-		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0){
+		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0 && caudasNasc==0){
 			tamJogador[i].OldSpeedX=tamJogador[i].SpeedX; tamJogador[i].OldSpeedY=tamJogador[i].SpeedY;
 
 			tamJogador[i].SpeedX=tamJogador[i-1].OldSpeedX; 
 			tamJogador[i].SpeedY=tamJogador[i-1].OldSpeedY;
+
+			console.log(tamJogador[i].OldSpeedY, tamJogador[i].OldSpeedX, tamJogador[i].SpeedY, tamJogador[i].SpeedX, i)
 		}
 
 		tamJogador[i].novaPos();
@@ -146,8 +168,6 @@ function updateArea(){
 	for(var i = 0 ; i<tamJogador.length; i++){
 		tamJogador[i].update();
 	}
-	
-	console.log(tamJogador)
 }
 
 function checkTime(frameInt) {
