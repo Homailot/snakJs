@@ -15,14 +15,14 @@ Entity.prototype.update = function(){
 };
 
 
-function JogadorBloco(x, y, color){
+function JogadorBloco(x, y, color, speedX, speedY){
 	//Vai buscar o x, o y e o width do Entity, com o x, y defenidos NESTE CONSTRUTOR como PARAMETROS do construtor acima, para ele nos devolver as variaveis X, Y Width e Height
 	Entity.call(this, x, y);
 
-	this.OldSpeedX=gridX/8;
-	this.OldSpeedY=0;
-	this.SpeedX=gridX/8;
-	this.SpeedY=0;
+	this.OldSpeedX=speedX;
+	this.OldSpeedY=speedY;
+	this.SpeedX=speedX;
+	this.SpeedY=speedY;
 	this.Color = color;
 	this.TurnH = 0;
 	this.TurnV = 0;
@@ -36,20 +36,44 @@ JogadorBloco.prototype.constructor=JogadorBloco;
 //Adiciona ao prototype do JogadorBloco a func novaPos, isto temos que meter DEPOIS do "JogadorBloco.prototype= Object.create(Entity.prototype);" porque se não
 //ele faz overwrite das funcs todas!!
 JogadorBloco.prototype.novaPos = function(){
-		if((this.Y-140)%(gridY)==0 && this.TurnH!=0){
-			this.OldSpeedY=this.SpeedY; this.OldSpeedX=this.SpeedX;
+
+	if((this.Y-140)%(gridY)==0 && this.X%(gridX)==0){
+		this.OldSpeedY=this.SpeedY; this.OldSpeedX=this.SpeedX;
+
+		if(this.TurnH!=0){
+			
 			this.SpeedX=(gridX/8)*this.TurnH; this.SpeedY=0;
 
 			this.TurnH=0;
 		}
-		else if(this.X%(gridX)==0 && this.TurnV!=0){
+		else if(this.TurnV!=0){
 			this.OldSpeedY=this.SpeedY; this.OldSpeedX=this.SpeedX;
 			this.SpeedY=(gridY/8)*this.TurnV; this.SpeedX=0;
 
 			this.TurnV=0;
 		}
+	}
 
 		this.X+=this.SpeedX; this.Y+=this.SpeedY;
+};
+
+
+function JogadorCauda(x, y, color, speedX, speedY){
+	JogadorBloco.call(this, x, y, speedX, speedY);
+
+	this.OldSpeedX=speedX;
+	this.OldSpeedY=speedY;
+	this.SpeedX=speedX;
+	this.SpeedY=speedY;
+}
+
+JogadorCauda.prototype= Object.create(JogadorBloco.prototype);
+JogadorCauda.prototype.constructor = JogadorCauda;
+
+JogadorCauda.prototype.novaPos = function(){
+	this.X+=this.SpeedX; this.Y+=this.SpeedY;
+
+	console.log(this.SpeedX);
 };
 
 function Comestivel(x, y, type){

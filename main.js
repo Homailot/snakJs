@@ -34,7 +34,7 @@ addEventListener("keydown", function(e) {
 			if(tamJogador[0].SpeedX==0) {
 				tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
 			}
-			
+
 			break;
 		case 39:
 			if(tamJogador[0].SpeedX==0) {
@@ -49,6 +49,8 @@ addEventListener("keydown", function(e) {
 		
 function updateArea(){
 	var py, px;
+	var posX, posY;
+	var sX, sy;
 
 	areaJogo.canvas.width=Math.floor(window.innerWidth/gridX)*gridX;
 	areaJogo.canvas.height=140+Math.floor((window.innerHeight-140)/gridY)*gridY;
@@ -89,7 +91,7 @@ function updateArea(){
 		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
 
-		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "black"));
+		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "black", gridX/8, 0));
 	}
 
 	//Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
@@ -107,25 +109,46 @@ function updateArea(){
 		c = new Comestivel((pX)*gridX, (pY)*gridY, "Ponto");
 		setTimeout(function(){c=undefined}, 4000);
 		
-		tamJogador.push(new JogadorBloco(tamJogador[tamJogador.length-1].X-tamJogador[tamJogador.length-1].Width, (tamJogador[tamJogador.length-1].Y)-140, "black"));
+		sX=tamJogador[tamJogador.length-1].OldSpeedX;
+		sY=tamJogador[tamJogador.length-1].OldSpeedY;
 
-		console.log("Heya");
+		if(tamJogador[tamJogador.length-1].SpeedX>0) {
+			posX=tamJogador[tamJogador.length-1].X-tamJogador[tamJogador.length-1].Width; posY=(tamJogador[tamJogador.length-1].Y)-140;
+		} else if(tamJogador[tamJogador.length-1].SpeedX<0){
+			posX=tamJogador[tamJogador.length-1].X+tamJogador[tamJogador.length-1].Width; posY=(tamJogador[tamJogador.length-1].Y)-140;
+		} else if(tamJogador[tamJogador.length-1].SpeedY>0){
+			posX=tamJogador[tamJogador.length-1].X; posY=(tamJogador[tamJogador.length-1].Y-140)-tamJogador[tamJogador.length-1].Height;
+		} else {
+			posX=tamJogador[tamJogador.length-1].X; posY=(tamJogador[tamJogador.length-1].Y-140)+tamJogador[tamJogador.length-1].Height;
+		}
+
+		tamJogador.push(new JogadorCauda(posX, posY, "black", sX, sY));
+
 	}
 
 	if(c!=undefined) c.update();
 	
-	for(var i = tamJogador.length-1; i>0; i--) {
-		tamJogador[i].X=tamJogador[i-1].X;
-		tamJogador[i].Y=tamJogador[i-1].Y;	
+	tamJogador[0].novaPos();
+
+	for(var i = 1; i<tamJogador.length; i++) {
+		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0){
+			tamJogador[i].OldSpeedX=tamJogador[i].SpeedX; tamJogador[i].OldSpeedY=tamJogador[i].SpeedY;
+
+			tamJogador[i].SpeedX=tamJogador[i-1].OldSpeedX; 
+			tamJogador[i].SpeedY=tamJogador[i-1].OldSpeedY;
+		}
+
+		tamJogador[i].novaPos();
 	}
 
-	tamJogador[0].novaPos();
+	
 	
 
 	for(var i = 0 ; i<tamJogador.length; i++){
 		tamJogador[i].update();
 	}
 	
+	console.log(tamJogador)
 }
 
 function checkTime(frameInt) {
