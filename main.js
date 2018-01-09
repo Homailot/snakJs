@@ -1,4 +1,4 @@
-﻿/*var ctx=document.getElementById('canvas').getContext("2d");
+/*var ctx=document.getElementById('canvas').getContext("2d");
 var img= new Image();
 img.onload = function() {
 	ctx.drawImage(img, 0 ,0, 30, 30);
@@ -33,6 +33,8 @@ addEventListener("keydown", function(e) {
 
 		
 function updateArea(){
+	var py, px;
+
 	areaJogo.canvas.width=Math.floor(window.innerWidth/gridX)*gridX;
 	areaJogo.canvas.height=140+Math.floor((window.innerHeight-140)/gridY)*gridY;
 	var cWidth=areaJogo.canvas.width;
@@ -68,7 +70,12 @@ function updateArea(){
 	}
 
 	//Cria a cabeça da cobra.
-	if(areaJogo.cntFrame==1) tamJogador.push(new JogadorBloco(0, 0, "black"));
+	if(areaJogo.cntFrame==1) {
+		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
+		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
+
+		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "black"));
+	}
 
 	//Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 	//Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
@@ -79,18 +86,26 @@ function updateArea(){
 		rangeX=rangeX<0?0:rangeX;
 		rangeXMax=rangeXMax>areaJogo.canvas.width-gridX?areaJogo.canvas.width-gridX:rangeXMax;
 
-		var pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
-		var pX = Math.floor(Math.random()*Math.floor(rangeXMax/gridX)+rangeX/gridX);
+		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
+		pX = Math.floor(Math.random()*Math.floor(rangeXMax/gridX)+rangeX/gridX);
 
 		c = new Comestivel((pX)*gridX, (pY)*gridY, "Ponto");
 		setTimeout(function(){c=undefined}, 4000);
+		
+		tamJogador.push(new JogadorBloco(tamJogador[tamJogador.length-1].X-tamJogador[tamJogador.length-1].Width, (tamJogador[tamJogador.length-1].Y)-140, "black"));
 
 		console.log("Heya");
 	}
 
 	if(c!=undefined) c.update();
+	
+	for(var i = tamJogador.length-1; i>0; i--) {
+		tamJogador[i].X=tamJogador[i-1].X;
+		tamJogador[i].Y=tamJogador[i-1].Y;	
+	}
 
 	tamJogador[0].novaPos();
+	
 
 	for(var i = 0 ; i<tamJogador.length; i++){
 		tamJogador[i].update();
