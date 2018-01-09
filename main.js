@@ -17,18 +17,33 @@ function startup(){
 addEventListener("keydown", function(e) {
 	var i;
 
-	if(e.keyCode==38) {
-		if(tamJogador[0].moveV==false) tamJogador[0].SpeedY=-(gridY/8);
+	switch (e.keyCode) {
+		case 38:
+			if(tamJogador[0].SpeedY==0) {
+				tamJogador[0].TurnV=-1; tamJogador[0].TurnH=0;
+			}
+
+			break;
+		case 40:
+			if(tamJogador[0].SpeedY==0) {
+				tamJogador[0].TurnV=1; tamJogador[0].TurnH=0;
+			}
+
+			break;
+		case 37:
+			if(tamJogador[0].SpeedX==0) {
+				tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
+			}
+			
+			break;
+		case 39:
+			if(tamJogador[0].SpeedX==0) {
+				tamJogador[0].TurnH=1; tamJogador[0].TurnV=0;
+			}
+
+			break;
 	}
-	else if(e.keyCode==40){
-		if(tamJogador[0].moveV==false) tamJogador[0].SpeedY=gridY/8;
-	}
-	else if(e.keyCode==37) {
-		if(tamJogador[0].moveH==false) tamJogador[0].SpeedX=-(gridX/8);
-	}
-	else if(e.keyCode==39) {
-		if(tamJogador[0].moveH==false) tamJogador[0].SpeedX=gridX/8;	
-	}
+
 }, false)
 
 		
