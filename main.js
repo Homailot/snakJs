@@ -109,8 +109,8 @@ function updateArea(){
 		c = new Comestivel((pX)*gridX, (pY)*gridY, "Ponto");
 		setTimeout(function(){c=undefined}, 4000);
 		
-		sX=tamJogador[tamJogador.length-1].OldSpeedX;
-		sY=tamJogador[tamJogador.length-1].OldSpeedY;
+		sX=tamJogador[tamJogador.length-1].SpeedX;
+		sY=tamJogador[tamJogador.length-1].SpeedY;
 
 		if(tamJogador[tamJogador.length-1].SpeedX>0) {
 			posX=tamJogador[tamJogador.length-1].X-tamJogador[tamJogador.length-1].Width; posY=(tamJogador[tamJogador.length-1].Y)-140;
@@ -123,7 +123,6 @@ function updateArea(){
 		}
 
 		tamJogador.push(new JogadorCauda(posX, posY, "black", sX, sY));
-
 	}
 
 	if(c!=undefined) c.update();
