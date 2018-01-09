@@ -29,7 +29,7 @@ addEventListener("keydown", function(e) {
 	else if(e.keyCode==39) {
 		if(tamJogador[0].moveH==false) tamJogador[0].SpeedX=gridX/8;	
 	}
-}, false)
+}, false) e;
 
 		
 function updateArea(){
