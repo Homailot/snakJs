@@ -61,6 +61,7 @@ JogadorBloco.prototype.novaPos = function(){
 function JogadorCauda(x, y, color, speedX, speedY){
 	JogadorBloco.call(this, x, y, speedX, speedY);
 
+	this.Color=color;
 	this.OldSpeedX=speedX;
 	this.OldSpeedY=speedY;
 	this.StopSpeedX=0;

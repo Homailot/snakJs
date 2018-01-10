@@ -96,7 +96,7 @@ function updateArea(){
 		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
 
-		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "black", gridX/8, 0));
+		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "red", gridX/8, 0));
 	}
 
 	//Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
@@ -177,7 +177,7 @@ function updateArea(){
 	}
 
 	//Update a imagem.
-	for(var i = 0 ; i<tamJogador.length; i++){
+	for(var i = tamJogador.length-1 ; i>=0; i--){
 		tamJogador[i].update();
 	}
 }
