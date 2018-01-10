@@ -125,8 +125,9 @@ function updateArea(){
 		}*/
 
 		tamJogador.splice(1, 0, new JogadorCauda(tamJogador[0].X, tamJogador[0].Y-140, "black", sX, sY));
+		origFrame=areaJogo.cntFrame;
+
 		for(var i = 1; i<tamJogador.length; i++) {
-			origFrame=areaJogo.cntFrame;
 			tamJogador[i].StopSpeedX=tamJogador[i].SpeedX; tamJogador[i].StopSpeedY=tamJogador[i].SpeedY;
 			tamJogador[i].SpeedX=0; tamJogador[i].SpeedY=0;	
 		}
@@ -138,16 +139,30 @@ function updateArea(){
 	tamJogador[0].novaPos();
 
 	if(caudasNasc>0){
-		console.log(areaJogo.cntFrame-origFrame)
+		console.log("ff");
 		if(areaJogo.cntFrame-origFrame==8){
 			caudasNasc--;
-			
-			for(var i = 1; i<tamJogador.length; i++) {
-				tamJogador[i].SpeedX=tamJogador[i].StopSpeedX; tamJogador[i].SpeedY=tamJogador[i].StopSpeedY;	
+			console.log("gg");
 
-			}	
+			if(caudasNasc==0){
+				console.log("hh");
+				for(var i = 1; i<tamJogador.length; i++) {
+					tamJogador[i].SpeedX=tamJogador[i].StopSpeedX; tamJogador[i].SpeedY=tamJogador[i].StopSpeedY;	
+				}	
+			} else {
+				console.log("jj");
+				sX=tamJogador[0].SpeedX;
+				sY=tamJogador[0].SpeedY;
+
+				tamJogador.splice(1, 0, new JogadorCauda(tamJogador[0].X, tamJogador[0].Y-140, "black", sX, sY));
+				tamJogador[1].StopSpeedX=tamJogador[1].SpeedX; tamJogador[1].StopSpeedY=tamJogador[1].SpeedY;
+				tamJogador[1].SpeedX=0; tamJogador[1].SpeedY=0;
+				origFrame=areaJogo.cntFrame;
+			}
 		}
 	}
+	console.log(areaJogo.cntFrame-origFrame)
+		
 
 	for(var i = 1; i<tamJogador.length; i++) {
 		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0 && caudasNasc==0){
