@@ -9,7 +9,7 @@ var areaJogo = {
 		this.canvas.height=140+Math.floor((window.innerHeight-140)/gridY)*gridY;
 		this.ctx=this.canvas.getContext("2d");
 		document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-		this.cntFrame=0;
+		this.cntFrame = 0;
 		this.interval = setInterval(updateArea, 20);
 	},
 	clear: function() {

@@ -72,6 +72,7 @@ function updateArea(){
 	areaJogo.ctx.strokeStyle="black";
 	areaJogo.ctx.stroke();
 
+
 	//Criar a grelha de fundo de jogo... é um bocado complicado de explicar
 	var rectColor="#47F73E";
 	var lastRect="#47F73E";
@@ -87,6 +88,8 @@ function updateArea(){
 			rectColor=rectColor=="#47F73E"?"#40E537":"#47F73E";
 		}
 	}
+
+	Math.floor((Math.random()*3123123))
 
 	//Cria a cabeça da cobra.
 	if(areaJogo.cntFrame==1) {
@@ -131,26 +134,20 @@ function updateArea(){
 			tamJogador[i].StopSpeedX=tamJogador[i].SpeedX; tamJogador[i].StopSpeedY=tamJogador[i].SpeedY;
 			tamJogador[i].SpeedX=0; tamJogador[i].SpeedY=0;	
 		}
-		caudasNasc++;
+		caudasNasc+=2;
 	}
 
 	if(c!=undefined) c.update();
 	
-	tamJogador[0].novaPos();
-
 	if(caudasNasc>0){
-		console.log("ff");
 		if(areaJogo.cntFrame-origFrame==8){
 			caudasNasc--;
-			console.log("gg");
 
 			if(caudasNasc==0){
-				console.log("hh");
 				for(var i = 1; i<tamJogador.length; i++) {
 					tamJogador[i].SpeedX=tamJogador[i].StopSpeedX; tamJogador[i].SpeedY=tamJogador[i].StopSpeedY;	
 				}	
 			} else {
-				console.log("jj");
 				sX=tamJogador[0].SpeedX;
 				sY=tamJogador[0].SpeedY;
 
@@ -161,9 +158,11 @@ function updateArea(){
 			}
 		}
 	}
-	console.log(areaJogo.cntFrame-origFrame)
+
+	tamJogador[0].novaPos();
 		
 
+	//Para a cauda seguir o jogador.
 	for(var i = 1; i<tamJogador.length; i++) {
 		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0 && caudasNasc==0){
 			tamJogador[i].OldSpeedX=tamJogador[i].SpeedX; tamJogador[i].OldSpeedY=tamJogador[i].SpeedY;
@@ -171,15 +170,13 @@ function updateArea(){
 			tamJogador[i].SpeedX=tamJogador[i-1].OldSpeedX; 
 			tamJogador[i].SpeedY=tamJogador[i-1].OldSpeedY;
 
-			console.log(tamJogador[i].OldSpeedY, tamJogador[i].OldSpeedX, tamJogador[i].SpeedY, tamJogador[i].SpeedX, i)
 		}
 
+		//Update a posicao.
 		tamJogador[i].novaPos();
 	}
 
-	
-	
-
+	//Update a imagem.
 	for(var i = 0 ; i<tamJogador.length; i++){
 		tamJogador[i].update();
 	}
