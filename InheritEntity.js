@@ -57,6 +57,11 @@ JogadorBloco.prototype.novaPos = function(){
 		this.X+=this.SpeedX; this.Y+=this.SpeedY;
 };
 
+JogadorBloco.prototype.checkCollide = function(objeto){
+	if(this.X>=objeto.X+objeto.Width || this.X+this.Width<=objeto.X || this.Y>=objeto.Y+objeto.Height || this.Y+this.Height<=objeto.Y) return false;
+	return true;
+};
+
 
 function JogadorCauda(x, y, color, speedX, speedY){
 	JogadorBloco.call(this, x, y, speedX, speedY);
@@ -75,6 +80,17 @@ JogadorCauda.prototype.constructor = JogadorCauda;
 
 JogadorCauda.prototype.novaPos = function(){
 	this.X+=this.SpeedX; this.Y+=this.SpeedY;
+};
+
+JogadorCauda.prototype.stop = function(){
+	console.log("praa");
+	this.StopSpeedX=this.SpeedX; this.StopSpeedY=this.SpeedY;
+	this.SpeedX=0; this.SpeedY=0;
+	console.log(tamJogador[1].stopSpeedX);	
+};
+
+JogadorCauda.prototype.resume = function(){
+	this.SpeedX=this.StopSpeedX; this.SpeedY=this.StopSpeedY;	
 };
 
 function Comestivel(x, y, type){

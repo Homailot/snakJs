@@ -96,72 +96,47 @@ function updateArea(){
 		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
 
-		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "red", gridX/8, 0));
+		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "red", 0, 0));
+
+		spawn("Ponto");
 	}
 
-	//Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
-	//Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
-	if(checkTime(400) || areaJogo.cntFrame==1){
-		var rangeX = tamJogador[0].X-gridX*10;
-		var rangeXMax= (tamJogador[0].X+gridX*10)-rangeX;
+	if(c!=undefined) {
+		c.update();
 
-		rangeX=rangeX<0?0:rangeX;
-		rangeXMax=rangeXMax>areaJogo.canvas.width-gridX?areaJogo.canvas.width-gridX:rangeXMax;
+		if(tamJogador[0].checkCollide(c)){
+			origFrame=areaJogo.cntFrame;
 
-		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
-		pX = Math.floor(Math.random()*Math.floor(rangeXMax/gridX)+rangeX/gridX);
+			for(var i = 1; i<tamJogador.length; i++){
+				tamJogador[i].stop();
+			} 
 
-		c = new Comestivel((pX)*gridX, (pY)*gridY, "Ponto");
-		setTimeout(function(){c=undefined}, 4000);
-		
-		sX=tamJogador[0].SpeedX;
-		sY=tamJogador[0].SpeedY;
-
-		/*if(tamJogador[tamJogador.length-1].SpeedX>0) {
-			posX=tamJogador[tamJogador.length-1].X-tamJogador[tamJogador.length-1].Width; posY=(tamJogador[tamJogador.length-1].Y)-140;
-		} else if(tamJogador[tamJogador.length-1].SpeedX<0){
-			posX=tamJogador[tamJogador.length-1].X+tamJogador[tamJogador.length-1].Width; posY=(tamJogador[tamJogador.length-1].Y)-140;
-		} else if(tamJogador[tamJogador.length-1].SpeedY>0){
-			posX=tamJogador[tamJogador.length-1].X; posY=(tamJogador[tamJogador.length-1].Y-140)-tamJogador[tamJogador.length-1].Height;
-		} else {
-			posX=tamJogador[tamJogador.length-1].X; posY=(tamJogador[tamJogador.length-1].Y-140)+tamJogador[tamJogador.length-1].Height;
-		}*/
-
-		tamJogador.splice(1, 0, new JogadorCauda(tamJogador[0].X, tamJogador[0].Y-140, "black", sX, sY));
-		origFrame=areaJogo.cntFrame;
-
-		for(var i = 1; i<tamJogador.length; i++) {
-			tamJogador[i].StopSpeedX=tamJogador[i].SpeedX; tamJogador[i].StopSpeedY=tamJogador[i].SpeedY;
-			tamJogador[i].SpeedX=0; tamJogador[i].SpeedY=0;	
+			caudasNasc+=2;
+			spawn("Ponto");
 		}
-		caudasNasc+=2;
 	}
-
-	if(c!=undefined) c.update();
 	
 	if(caudasNasc>0){
 		if(areaJogo.cntFrame-origFrame==8){
-			caudasNasc--;
-
+			caudasNasc--; origFrame=areaJogo.cntFrame;
+			
 			if(caudasNasc==0){
-				for(var i = 1; i<tamJogador.length; i++) {
-					tamJogador[i].SpeedX=tamJogador[i].StopSpeedX; tamJogador[i].SpeedY=tamJogador[i].StopSpeedY;	
-				}	
-			} else {
-				sX=tamJogador[0].SpeedX;
-				sY=tamJogador[0].SpeedY;
-
-				tamJogador.splice(1, 0, new JogadorCauda(tamJogador[0].X, tamJogador[0].Y-140, "black", sX, sY));
-				tamJogador[1].StopSpeedX=tamJogador[1].SpeedX; tamJogador[1].StopSpeedY=tamJogador[1].SpeedY;
-				tamJogador[1].SpeedX=0; tamJogador[1].SpeedY=0;
-				origFrame=areaJogo.cntFrame;
+				for(var i = 1; i<tamJogador.length; i++) tamJogador[i].resume();
 			}
+		}
+
+		if(areaJogo.cntFrame-origFrame==0 && caudasNasc!=0){
+			sX=tamJogador[0].SpeedX;
+			sY=tamJogador[0].SpeedY;
+
+			tamJogador.splice(1, 0, new JogadorCauda(tamJogador[0].X, tamJogador[0].Y-140, "black", sX, sY));
+			tamJogador[1].stop();
 		}
 	}
 
+
 	tamJogador[0].novaPos();
 		
-
 	//Para a cauda seguir o jogador.
 	for(var i = 1; i<tamJogador.length; i++) {
 		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0 && caudasNasc==0){
@@ -186,4 +161,32 @@ function checkTime(frameInt) {
 	if(areaJogo.cntFrame%frameInt==0) return true;
 
 	return false;
+}
+
+//Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
+//Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
+function spawn(type){
+	var rangeX, rangeXMax;
+	var pY, pX;
+	var f=0;
+
+	rangeX = tamJogador[0].X-gridX*10;
+	rangeXMax= (tamJogador[0].X+gridX*10)-rangeX;
+
+	rangeX=rangeX<0?0:rangeX;
+	rangeXMax=rangeXMax>areaJogo.canvas.width-gridX?areaJogo.canvas.width-gridX:rangeXMax;
+
+	while(f==0){
+		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
+		pX = Math.floor(Math.random()*Math.floor(rangeXMax/gridX)+rangeX/gridX);
+
+		f=1;
+		for(i=0; i<tamJogador.length; i++){
+			if(!(pY*gridY>=tamJogador[i].Y+tamJogador[i].Height || pY*gridY+gridY<=tamJogador[i].Y || pX*gridX>=tamJogador[i].X+tamJogador[i].Width || pX*gridX+gridX<=tamJogador[i].X)) f=0;
+		}	
+	}
+	
+
+	c = new Comestivel((pX)*gridX, (pY)*gridY, type);
+
 }
