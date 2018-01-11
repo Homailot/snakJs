@@ -35,7 +35,7 @@ JogadorBloco.prototype.constructor=JogadorBloco;
 
 //Adiciona ao prototype do JogadorBloco a func novaPos, isto temos que meter DEPOIS do "JogadorBloco.prototype= Object.create(Entity.prototype);" porque se não
 //ele faz overwrite das funcs todas!!
-JogadorBloco.prototype.novaPos = function(){
+JogadorBloco.prototype.newPos = function(){
 
 	if((this.Y-140)%(gridY)==0 && this.X%(gridX)==0){
 		this.OldSpeedY=this.SpeedY; this.OldSpeedX=this.SpeedX;
@@ -78,15 +78,13 @@ function JogadorCauda(x, y, color, speedX, speedY){
 JogadorCauda.prototype= Object.create(JogadorBloco.prototype);
 JogadorCauda.prototype.constructor = JogadorCauda;
 
-JogadorCauda.prototype.novaPos = function(){
+JogadorCauda.prototype.newPos = function(){
 	this.X+=this.SpeedX; this.Y+=this.SpeedY;
 };
 
 JogadorCauda.prototype.stop = function(){
-	console.log("praa");
 	this.StopSpeedX=this.SpeedX; this.StopSpeedY=this.SpeedY;
 	this.SpeedX=0; this.SpeedY=0;
-	console.log(tamJogador[1].stopSpeedX);	
 };
 
 JogadorCauda.prototype.resume = function(){

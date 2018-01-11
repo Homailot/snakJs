@@ -96,26 +96,27 @@ function updateArea(){
 		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
 
-		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "red", 0, 0));
+		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", 0, 0));
 
 		spawn("Ponto");
 	}
 
 	if(c!=undefined) {
-		c.update();
+		c.update(); 
 
 		if(tamJogador[0].checkCollide(c)){
-			origFrame=areaJogo.cntFrame;
+			if(caudasNasc==0){
+				origFrame=areaJogo.cntFrame;
 
-			for(var i = 1; i<tamJogador.length; i++){
-				tamJogador[i].stop();
-			} 
-
+				for(var i = 1; i<tamJogador.length; i++){
+					tamJogador[i].stop();
+				} 
+			}
 			caudasNasc+=2;
 			spawn("Ponto");
 		}
 	}
-	
+
 	if(caudasNasc>0){
 		if(areaJogo.cntFrame-origFrame==8){
 			caudasNasc--; origFrame=areaJogo.cntFrame;
@@ -135,7 +136,7 @@ function updateArea(){
 	}
 
 
-	tamJogador[0].novaPos();
+	tamJogador[0].newPos();
 		
 	//Para a cauda seguir o jogador.
 	for(var i = 1; i<tamJogador.length; i++) {
@@ -148,7 +149,7 @@ function updateArea(){
 		}
 
 		//Update a posicao.
-		tamJogador[i].novaPos();
+		tamJogador[i].newPos();
 	}
 
 	//Update a imagem.
@@ -166,24 +167,29 @@ function checkTime(frameInt) {
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
 function spawn(type){
-	var rangeX, rangeXMax;
+	//var rangeX, rangeXMax;
 	var pY, pX;
 	var f=0;
 
-	rangeX = tamJogador[0].X-gridX*10;
-	rangeXMax= (tamJogador[0].X+gridX*10)-rangeX;
+	//rangeX = tamJogador[0].X-gridX*10;
+	//rangeXMax= (tamJogador[0].X+gridX*10)-rangeX;
 
-	rangeX=rangeX<0?0:rangeX;
-	rangeXMax=rangeXMax>areaJogo.canvas.width-gridX?areaJogo.canvas.width-gridX:rangeXMax;
+	//rangeX=rangeX<0?0:rangeX;
+	//rangeXMax=rangeXMax>areaJogo.canvas.width-gridX?areaJogo.canvas.width-gridX:rangeXMax;
 
 	while(f==0){
-		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
-		pX = Math.floor(Math.random()*Math.floor(rangeXMax/gridX)+rangeX/gridX);
+		pY = Math.floor(Math.random()*Math.floor((areaJogo.canvas.height-140)/gridY));
+		pX = Math.floor(Math.random()*(Math.floor(areaJogo.canvas.width/gridX)));
 
 		f=1;
-		for(i=0; i<tamJogador.length; i++){
-			if(!(pY*gridY>=tamJogador[i].Y+tamJogador[i].Height || pY*gridY+gridY<=tamJogador[i].Y || pX*gridX>=tamJogador[i].X+tamJogador[i].Width || pX*gridX+gridX<=tamJogador[i].X)) f=0;
-		}	
+		for(var i=0; i<tamJogador.length; i++){
+			if(!((pX*gridX)>=tamJogador[i].X+(tamJogador[i].Width) || (pX*gridX)+gridX<=tamJogador[i].X || (pY*gridY)+140>=tamJogador[i].Y+(tamJogador[i].Height) || ((pY*gridY)+gridY)+140<=tamJogador[i].Y)) {
+				f=0; 
+				break;
+			}
+			console.log("flag: " + f + ";esquerda fruto: " + (pX*gridX) + ";direita fruto: " + (pX*gridX+gridX) + ";cima Fruto: "+(pY*gridY)+ ";baixo Fruto: "+ (pY*gridY+gridY));
+			console.log("esquerda jogador: " + tamJogador[i].X + ";direita jogador: " + (tamJogador[i].X+tamJogador[i].Width) + ";cimaJogador: " + tamJogador[i].Y + ";baixoJogador: " + (tamJogador[i].Y+tamJogador[i].Height));
+		}			
 	}
 	
 
