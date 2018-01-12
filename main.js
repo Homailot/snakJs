@@ -61,7 +61,7 @@ function updateArea(){
 
 	//Apaga o frame anterior
 	areaJogo.clear();
-	areaJogo.cntFrame++;
+	if(origFrame<8)origFrame++;
 
 	//Fazer o background, e 140 pixeis para as tabelas em cima
 	areaJogo.ctx.fillStyle= "#568929";
@@ -93,6 +93,7 @@ function updateArea(){
 
 	//Cria a cabeça da cobra.
 	if(areaJogo.cntFrame==1) {
+		areaJogo.cntFrame++;
 		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
 
@@ -106,7 +107,7 @@ function updateArea(){
 
 		if(tamJogador[0].checkCollide(c)){
 			if(caudasNasc==0){
-				origFrame=areaJogo.cntFrame;
+				origFrame=0;
 
 				for(var i = 1; i<tamJogador.length; i++){
 					tamJogador[i].stop();
@@ -118,15 +119,15 @@ function updateArea(){
 	}
 
 	if(caudasNasc>0){
-		if(areaJogo.cntFrame-origFrame==8){
-			caudasNasc--; origFrame=areaJogo.cntFrame;
+		if(origFrame==8){
+			caudasNasc--; origFrame=0;
 			
 			if(caudasNasc==0){
 				for(var i = 1; i<tamJogador.length; i++) tamJogador[i].resume();
 			}
 		}
 
-		if(areaJogo.cntFrame-origFrame==0 && caudasNasc!=0){
+		if(origFrame==0 && caudasNasc!=0){
 			sX=tamJogador[0].SpeedX;
 			sY=tamJogador[0].SpeedY;
 
@@ -157,25 +158,11 @@ function updateArea(){
 		tamJogador[i].update();
 	}
 }
-
-function checkTime(frameInt) {
-	if(areaJogo.cntFrame%frameInt==0) return true;
-
-	return false;
-}
-
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
 function spawn(type){
-	//var rangeX, rangeXMax;
 	var pY, pX;
 	var f=0;
-
-	//rangeX = tamJogador[0].X-gridX*10;
-	//rangeXMax= (tamJogador[0].X+gridX*10)-rangeX;
-
-	//rangeX=rangeX<0?0:rangeX;
-	//rangeXMax=rangeXMax>areaJogo.canvas.width-gridX?areaJogo.canvas.width-gridX:rangeXMax;
 
 	while(f==0){
 		pY = Math.floor(Math.random()*Math.floor((areaJogo.canvas.height-140)/gridY));
@@ -187,12 +174,10 @@ function spawn(type){
 				f=0; 
 				break;
 			}
-			console.log("flag: " + f + ";esquerda fruto: " + (pX*gridX) + ";direita fruto: " + (pX*gridX+gridX) + ";cima Fruto: "+(pY*gridY)+ ";baixo Fruto: "+ (pY*gridY+gridY));
-			console.log("esquerda jogador: " + tamJogador[i].X + ";direita jogador: " + (tamJogador[i].X+tamJogador[i].Width) + ";cimaJogador: " + tamJogador[i].Y + ";baixoJogador: " + (tamJogador[i].Y+tamJogador[i].Height));
 		}			
 	}
 	
 
-	c = new Comestivel((pX)*gridX, (pY)*gridY, type);
+	c = new Edible((pX)*gridX, (pY)*gridY, type);
 
 }

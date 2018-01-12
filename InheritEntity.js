@@ -91,7 +91,7 @@ JogadorCauda.prototype.resume = function(){
 	this.SpeedX=this.StopSpeedX; this.SpeedY=this.StopSpeedY;	
 };
 
-function Comestivel(x, y, type){
+function Edible(x, y, type){
 	Entity.call(this, x, y);
 
 	this.Type=type;
@@ -100,9 +100,9 @@ function Comestivel(x, y, type){
 	}
 }
 
-Comestivel.prototype= Object.create(Entity.prototype);
-Comestivel.prototype.constructor=JogadorBloco;
+Edible.prototype= Object.create(Entity.prototype);
+Edible.prototype.constructor=Edible;
 
-Comestivel.prototype.delete = function(){
+Edible.prototype.delete = function(){
 	this.Type=null;
 };
