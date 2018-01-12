@@ -53,6 +53,7 @@ function updateArea(){
 	var py, px;
 	var posX, posY;
 	var sX, sy;
+	var i;
 
 	areaJogo.canvas.width=Math.floor(window.innerWidth/gridX)*gridX;
 	areaJogo.canvas.height=140+Math.floor((window.innerHeight-140)/gridY)*gridY;
@@ -77,7 +78,7 @@ function updateArea(){
 	var rectColor="#47F73E";
 	var lastRect="#47F73E";
 
-	for(var i=0; i<Math.floor((window.innerHeight-140)/gridY); i++){
+	for(i=0; i<Math.floor((window.innerHeight-140)/gridY); i++){
 		if(lastRect==rectColor) rectColor=rectColor=="#47F73E"?"#40E537":"#47F73E";
 		lastRect=rectColor;
 
@@ -88,8 +89,6 @@ function updateArea(){
 			rectColor=rectColor=="#47F73E"?"#40E537":"#47F73E";
 		}
 	}
-
-	Math.floor((Math.random()*3123123))
 
 	//Cria a cabeça da cobra.
 	if(areaJogo.cntFrame==1) {
@@ -102,6 +101,19 @@ function updateArea(){
 		spawn("Ponto");
 	}
 
+	if(tamJogador[0].X+tamJogador[0].Width>areaJogo.canvas.width || tamJogador[0].X<0 || tamJogador[0].Y+tamJogador[0].Height>areaJogo.canvas.height ||tamJogador[0].Y<140){
+		clearInterval(areaJogo.interval);
+	}
+
+	for(i=3; i<tamJogador.length; i++) {
+		if(tamJogador[0].checkCollide(tamJogador[i])){
+			clearInterval(areaJogo.interval);
+			break;
+		}
+	}	
+
+	
+
 	if(c!=undefined) {
 		c.update(); 
 
@@ -109,7 +121,7 @@ function updateArea(){
 			if(caudasNasc==0){
 				origFrame=0;
 
-				for(var i = 1; i<tamJogador.length; i++){
+				for(i = 1; i<tamJogador.length; i++){
 					tamJogador[i].stop();
 				} 
 			}
@@ -140,7 +152,7 @@ function updateArea(){
 	tamJogador[0].newPos();
 		
 	//Para a cauda seguir o jogador.
-	for(var i = 1; i<tamJogador.length; i++) {
+	for(i = 1; i<tamJogador.length; i++) {
 		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0 && caudasNasc==0){
 			tamJogador[i].OldSpeedX=tamJogador[i].SpeedX; tamJogador[i].OldSpeedY=tamJogador[i].SpeedY;
 
@@ -154,7 +166,7 @@ function updateArea(){
 	}
 
 	//Update a imagem.
-	for(var i = tamJogador.length-1 ; i>=0; i--){
+	for(i = tamJogador.length-1 ; i>=0; i--){
 		tamJogador[i].update();
 	}
 }
