@@ -101,19 +101,7 @@ function updateArea(){
 		spawn("Ponto");
 	}
 
-	if(tamJogador[0].X+tamJogador[0].Width>areaJogo.canvas.width || tamJogador[0].X<0 || tamJogador[0].Y+tamJogador[0].Height>areaJogo.canvas.height ||tamJogador[0].Y<140){
-		clearInterval(areaJogo.interval);
-	}
-
-	for(i=3; i<tamJogador.length; i++) {
-		if(tamJogador[0].checkCollide(tamJogador[i])){
-			clearInterval(areaJogo.interval);
-			break;
-		}
-	}	
-
-	
-
+	//Verificar se cobra comeu o ponto, e fazer spawn de outro ponto num sitio aleatorio
 	if(c!=undefined) {
 		c.update(); 
 
@@ -122,14 +110,21 @@ function updateArea(){
 				origFrame=0;
 
 				for(i = 1; i<tamJogador.length; i++){
+					//Para as caudas gravando o valor das suas velocidades para depois retoma-las depois da cauda crescer.
 					tamJogador[i].stop();
 				} 
 			}
 			caudasNasc+=2;
+
+			//Verifica se o jogador ganhou.
+			if(tamJogador.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
+				clearInterval(areaJogo.interval); return;
+			}
 			spawn("Ponto");
 		}
 	}
 
+	//Faz a cauda crescer, depois espera oito frames para fazer crescer outra.
 	if(caudasNasc>0){
 		if(origFrame==8){
 			caudasNasc--; origFrame=0;
@@ -148,7 +143,7 @@ function updateArea(){
 		}
 	}
 
-
+	//Update da posicao da cabeça, aplica as velocidades
 	tamJogador[0].newPos();
 		
 	//Para a cauda seguir o jogador.
@@ -165,6 +160,18 @@ function updateArea(){
 		tamJogador[i].newPos();
 	}
 
+	//Check colisões
+	if(tamJogador[0].X+tamJogador[0].Width>areaJogo.canvas.width || tamJogador[0].X<0 || tamJogador[0].Y+tamJogador[0].Height>areaJogo.canvas.height ||tamJogador[0].Y<140){
+		clearInterval(areaJogo.interval);
+	}
+
+	for(i=3; i<tamJogador.length; i++) {
+		if(tamJogador[0].checkCollide(tamJogador[i])){
+			clearInterval(areaJogo.interval);
+			break;
+		}
+	}	
+
 	//Update a imagem.
 	for(i = tamJogador.length-1 ; i>=0; i--){
 		tamJogador[i].update();
@@ -174,15 +181,23 @@ function updateArea(){
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
 function spawn(type){
 	var pY, pX;
+	var right, left, down, up;
+	var otherLeft, otherDown, otherUp, otherRight;
 	var f=0;
 
 	while(f==0){
 		pY = Math.floor(Math.random()*Math.floor((areaJogo.canvas.height-140)/gridY));
 		pX = Math.floor(Math.random()*(Math.floor(areaJogo.canvas.width/gridX)));
+		right = pX*gridX+gridX; left = pX*gridX; down=pY*gridY+gridY + 140; up=pY*gridY + 140;
 
 		f=1;
 		for(var i=0; i<tamJogador.length; i++){
-			if(!((pX*gridX)>=tamJogador[i].X+(tamJogador[i].Width) || (pX*gridX)+gridX<=tamJogador[i].X || (pY*gridY)+140>=tamJogador[i].Y+(tamJogador[i].Height) || ((pY*gridY)+gridY)+140<=tamJogador[i].Y)) {
+			otherRight = tamJogador[i].X+(tamJogador[i].Width);
+			otherLeft = tamJogador[i].X;
+			otherDown = tamJogador[i].Y+(tamJogador[i].Height);
+			otherUp= tamJogador[i].Y;
+
+			if(!(left>=otherRight || right<=otherLeft || up>=otherDown || down<=otherUp)) {
 				f=0; 
 				break;
 			}
