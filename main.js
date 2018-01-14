@@ -96,7 +96,8 @@ function updateArea(){
 		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
 
-		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", 0, 0));
+		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", gridX/8, 0));
+		tamJogador.push(new JogadorCauda((pX-1)*gridX,  (pY)*gridY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate));
 
 		spawn("Ponto");
 	}
@@ -109,10 +110,11 @@ function updateArea(){
 			if(caudasNasc==0){
 				origFrame=0;
 
-				for(i = 1; i<tamJogador.length; i++){
+				/*for(i = 1; i<tamJogador.length; i++){
 					//Para as caudas gravando o valor das suas velocidades para depois retoma-las depois da cauda crescer.
 					tamJogador[i].stop();
-				} 
+				} */
+				tamJogador[tamJogador.length-1].stop();
 			}
 			caudasNasc+=2;
 
@@ -130,34 +132,41 @@ function updateArea(){
 			caudasNasc--; origFrame=0;
 			
 			if(caudasNasc==0){
-				for(var i = 1; i<tamJogador.length; i++) tamJogador[i].resume();
+				tamJogador[tamJogador.length-1].resume();
 			}
 		}
 
 		if(origFrame==0 && caudasNasc!=0){
-			sX=tamJogador[0].SpeedX;
-			sY=tamJogador[0].SpeedY;
+			sX=tamJogador[tamJogador.length-1].StopSpeedX;
+			sY=tamJogador[tamJogador.length-1].StopSpeedY;
 
-			tamJogador.splice(1, 0, new JogadorCauda(tamJogador[0].X, tamJogador[0].Y-140, "black", sX, sY));
-			tamJogador[1].stop();
+			tamJogador.splice(tamJogador.length-1, 0, new JogadorCauda(tamJogador[tamJogador.length-1].X, tamJogador[tamJogador.length-1].Y-140, "black", sX, sY, tamJogador[tamJogador.length-1].OldRotate));
 		}
 	}
 
 	//Update da posicao da cabeça, aplica as velocidades
+	tamJogador[0].turn();
 	tamJogador[0].newPos();
+	console.log(tamJogador[0].OldRotate+ " 0");
 		
 	//Para a cauda seguir o jogador.
 	for(i = 1; i<tamJogador.length; i++) {
-		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0 && caudasNasc==0){
+		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0){
 			tamJogador[i].OldSpeedX=tamJogador[i].SpeedX; tamJogador[i].OldSpeedY=tamJogador[i].SpeedY;
+			tamJogador[i].OldAngleMult=tamJogador[i].AngleMult;
+			tamJogador[i].OldX=tamJogador[i].X; tamJogador[i].OldY=tamJogador[i].Y;
+			tamJogador[i].Angle=0;
+			tamJogador[i].OldRotate=tamJogador[i].isRotating;
 
 			tamJogador[i].SpeedX=tamJogador[i-1].OldSpeedX; 
 			tamJogador[i].SpeedY=tamJogador[i-1].OldSpeedY;
-
+			tamJogador[i].AngleMult=tamJogador[i-1].OldAngleMult;
+			tamJogador[i].isRotating=tamJogador[i-1].OldRotate;
 		}
-
+		
 		//Update a posicao.
 		tamJogador[i].newPos();
+		console.log(tamJogador[i].isRotating, i);
 	}
 
 	//Check colisões
@@ -174,8 +183,10 @@ function updateArea(){
 
 	//Update a imagem.
 	for(i = tamJogador.length-1 ; i>=0; i--){
+		
 		tamJogador[i].update();
 	}
+	console.log("||||||||||");
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
