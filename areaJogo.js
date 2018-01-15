@@ -10,7 +10,7 @@ var areaJogo = {
 		this.ctx=this.canvas.getContext("2d");
 		document.getElementById("container").insertBefore(this.canvas, document.getElementById("container").childNodes[0]);
 		this.cntFrame = 1;
-		this.interval = setInterval(updateArea, 20);
+		this.interval = setInterval(updateArea, 25);
 	},
 	clear: function() {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
