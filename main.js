@@ -1,15 +1,17 @@
-/*var ctx=document.getElementById('canvas').getContext("2d");
-var img= new Image();
-img.onload = function() {
-	ctx.drawImage(img, 0 ,0, 30, 30);
-}
-img.src="6da17dc320f06b1a191f6d3270ba8a4b--oreos-online-games.jpg";*/
+
+var scoreImg= new Image();
+scoreImg.src="score.fw.png";
+
 var tamJogador = [];
 var gridX=30;
 var gridY=30;
 var caudasNasc=0;
-var c;
+var curEdibles = [];
+var cntComida=0;
 var origFrame;
+var score=0;
+
+document.fonts.load('10pt "VCR OSD Mono"')
 
 function startup(){
 	areaJogo.start();
@@ -90,45 +92,64 @@ function updateArea(){
 		}
 	}
 
+	areaJogo.ctx.drawImage(scoreImg, areaJogo.canvas.width-300, 0);
+	areaJogo.ctx.font= '52px VCR OSD Mono';
+	areaJogo.ctx.fontAlign="center";
+	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+22);
+
 	//Cria a cabeça da cobra.
 	if(areaJogo.cntFrame==1) {
 		areaJogo.cntFrame++;
 		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
 
-		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", gridX/8, 0));
+		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", gridX, 0));
 		tamJogador.push(new JogadorCauda((pX-1)*gridX,  (pY)*gridY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate));
 
-		spawn("Ponto");
+		spawn(0);
 	}
 
 	//Verificar se cobra comeu o ponto, e fazer spawn de outro ponto num sitio aleatorio
-	if(c!=undefined) {
-		c.update(); 
+	if(curEdibles!=undefined) {
+		for(i=0; i<curEdibles.length; i++){
+			curEdibles[i].update();
 
-		if(tamJogador[0].checkCollide(c)){
-			if(caudasNasc==0){
-				origFrame=0;
+			if(tamJogador[0].checkCollide(curEdibles[i])){
+				score+=curEdibles[i].Value;
 
-				/*for(i = 1; i<tamJogador.length; i++){
-					//Para as caudas gravando o valor das suas velocidades para depois retoma-las depois da cauda crescer.
-					tamJogador[i].stop();
-				} */
-				tamJogador[tamJogador.length-1].stop();
+				if(curEdibles[i].Type==0) {
+					cntComida++;
+					if(cntComida%4==0) {
+						if(!curEdibles[1]) spawn(1);
+						setTimeout(function() {curEdibles.splice(1, 1)}, 5000);
+					}
+
+
+					if(caudasNasc==0){
+						origFrame=0;
+
+						tamJogador[tamJogador.length-1].stop();
+					}
+
+					caudasNasc+=2;
+
+					spawn(0);
+				} else if(curEdibles[i].Type==1) {
+					tamJogador.splice(-1, 3);
+					curEdibles.splice(1, 1);
+				}
+
+				//Verifica se o jogador ganhou.
+				if(tamJogador.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
+					clearInterval(areaJogo.interval); return;
+				}
 			}
-			caudasNasc+=2;
-
-			//Verifica se o jogador ganhou.
-			if(tamJogador.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
-				clearInterval(areaJogo.interval); return;
-			}
-			spawn("Ponto");
 		}
 	}
 
 	//Faz a cauda crescer, depois espera oito frames para fazer crescer outra.
 	if(caudasNasc>0){
-		if(origFrame==8){
+		if(origFrame==speedValX){
 			caudasNasc--; origFrame=0;
 			
 			if(caudasNasc==0){
@@ -147,7 +168,6 @@ function updateArea(){
 	//Update da posicao da cabeça, aplica as velocidades
 	tamJogador[0].turn();
 	tamJogador[0].newPos();
-	console.log(tamJogador[0].OldRotate+ " 0");
 		
 	//Para a cauda seguir o jogador.
 	for(i = 1; i<tamJogador.length; i++) {
@@ -166,7 +186,6 @@ function updateArea(){
 		
 		//Update a posicao.
 		tamJogador[i].newPos();
-		console.log(tamJogador[i].isRotating, i);
 	}
 
 	//Check colisões
@@ -186,7 +205,6 @@ function updateArea(){
 		
 		tamJogador[i].update();
 	}
-	console.log("||||||||||");
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
@@ -216,6 +234,5 @@ function spawn(type){
 	}
 	
 
-	c = new Edible((pX)*gridX, (pY)*gridY, type);
-
+	curEdibles[type] = new Edible((pX)*gridX, (pY)*gridY, type);
 }
