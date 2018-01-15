@@ -1,6 +1,9 @@
 
 var RotatingEnum = {RIGHTBOTTOM: 1, LEFTBOTTOM:2, RIGHTTOP:3, LEFTTOP:4, NOT:5};
 
+var speedValX=6;
+var speedValY=6;
+
 //Construtor Mãe, Um construtor cria objetos, objetos são basicamentes variáveis com muitas variaveis dentro algumas das quais podem ser funcoes.
 function Entity(x, y){
 	this.X = x;
@@ -55,7 +58,7 @@ JogadorBloco.prototype.turn = function(){
 		}*/
 
 		if(this.TurnH!=0){
-			this.SpeedX=(gridX/8)*this.TurnH; this.SpeedY=0;
+			this.SpeedX=gridX*this.TurnH; this.SpeedY=0;
 
 			if(this.TurnH>0 && (this.OldSpeedX!=0 || this.OldSpeedY!=0)) {
 				if(this.OldSpeedY>0){
@@ -82,7 +85,7 @@ JogadorBloco.prototype.turn = function(){
 			this.TurnH=0;
 		}
 		else if(this.TurnV!=0){
-			this.SpeedY=(gridY/8)*this.TurnV; this.SpeedX=0;
+			this.SpeedY=gridY*this.TurnV; this.SpeedX=0;
 
 			if(this.TurnV>0&& (this.OldSpeedX!=0 || this.OldSpeedY!=0)) {
 				if(this.OldSpeedX>0) {
@@ -117,7 +120,7 @@ JogadorBloco.prototype.turn = function(){
 //Adiciona ao prototype do JogadorBloco a func novaPos, isto temos que meter DEPOIS do "JogadorBloco.prototype= Object.create(Entity.prototype);" porque se não
 //ele faz overwrite das funcs todas!!
 JogadorBloco.prototype.newPos = function(){
-	this.X+=this.SpeedX; this.Y+=this.SpeedY;
+	this.X+=this.SpeedX/speedValX; this.Y+=this.SpeedY/speedValY;
 };
 
 JogadorBloco.prototype.checkCollide = function(objeto){
@@ -158,10 +161,10 @@ JogadorCauda.prototype.resume = function(){
 };
 
 JogadorCauda.prototype.newPos = function(){
-	this.X+=this.SpeedX; this.Y+=this.SpeedY;
+	this.X+=this.SpeedX/speedValX; this.Y+=this.SpeedY/speedValY;
 
 	if(this.isRotating!=RotatingEnum.NOT){
-		this.Angle+=(90/8)*this.AngleMult;
+		this.Angle+=(90/speedValX)*this.AngleMult;
 
 		if(this.isRotating==RotatingEnum.RIGHTBOTTOM){
 			this.RotationCenterX=this.OldX+this.Width; this.RotationCenterY=this.OldY+this.Height;
@@ -206,8 +209,12 @@ function Edible(x, y, type){
 	Entity.call(this, x, y);
 
 	this.Type=type;
-	if(this.Type=="Ponto") {
+	if(this.Type==0) {
+		this.Value=10;
 		this.Color="#FD1515";
+	} else if(this.Type==1){
+		this.Color="#FF008A";
+		this.Value=30;
 	}
 }
 
