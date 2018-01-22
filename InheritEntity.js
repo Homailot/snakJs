@@ -20,7 +20,9 @@ Entity.prototype.update = function(){
 	areaJogo.ctx.fillStyle = this.Color;
 
 	if(this.X+this.Width>areaJogo.canvas.width) areaJogo.ctx.fillRect(-1, this.Y-1, (this.X+this.Width)-areaJogo.canvas.width+1, this.Height+1);
-	else if(this.X<0) areaJogo.ctx.fillRect(-1, this.Y-1, (this.X)-areaJogo.canvas.width+1, this.Height+1);
+	else if(this.X<0) areaJogo.ctx.fillRect(areaJogo.canvas.width+this.X-1, this.Y-1, this.Width, this.Height+1);
+	else if(this.Y+this.Height>areaJogo.canvas.height) areaJogo.ctx.fillRect(this.X-1, 139, this.Width+1, this.Y+this.Height-areaJogo.canvas.height+1);
+	else if(this.Y<140) areaJogo.ctx.fillRect(this.X-1, areaJogo.canvas.height+(this.Y-140)-1, this.Width+1, this.Height+1);
 	
 	areaJogo.ctx.fillRect(this.X-1, this.Y-1, this.Width+1, this.Height+1);
 };
@@ -210,6 +212,8 @@ JogadorCauda.prototype.update = function(){
 	areaJogo.ctx.fillStyle=this.Color;
 	if(this.X+this.Width>areaJogo.canvas.width) areaJogo.ctx.fillRect(-1, this.Y-1, (this.X+this.Width)-areaJogo.canvas.width+1, this.Height+1);
 	else if(this.X<0) areaJogo.ctx.fillRect((this.X)+areaJogo.canvas.width-1, this.Y-1, this.Width+1, this.Height+1);
+	else if(this.Y+this.Height>areaJogo.canvas.height) areaJogo.ctx.fillRect(this.X-1, 139, this.Width+1, this.Y+this.Height-areaJogo.canvas.height+1);
+	else if(this.Y<140) areaJogo.ctx.fillRect(this.X-1, areaJogo.canvas.height+(this.Y-140)-1, this.Width+1, this.Height+1);
 
 	areaJogo.ctx.save();
 	areaJogo.ctx.fillStyle=this.Color;
