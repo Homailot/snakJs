@@ -3,6 +3,7 @@ var RotatingEnum = {RIGHTBOTTOM: 1, LEFTBOTTOM:2, RIGHTTOP:3, LEFTTOP:4, NOT:5};
 
 var speedValX=6;
 var speedValY=6;
+var speedMult=1;
 
 //Construtor Mãe, Um construtor cria objetos, objetos são basicamentes variáveis com muitas variaveis dentro algumas das quais podem ser funcoes.
 function Entity(x, y){
@@ -16,8 +17,12 @@ function Entity(x, y){
 //se metesse no construtor ele estaria sempre a criar funcoes novas enquanto se meter no prototype (como o prototype de um construtor e "pai" dele (engloba-o))
 //cria uma vez e nunca mais cria.
 Entity.prototype.update = function(){
-	areaJogo.ctx.fillStyle = this.Color;	
-	areaJogo.ctx.fillRect(this.X-1, this.Y-1, this.Width+1, this.Height+1); 
+	areaJogo.ctx.fillStyle = this.Color;
+
+	if(this.X+this.Width>areaJogo.canvas.width) areaJogo.ctx.fillRect(-1, this.Y-1, (this.X+this.Width)-areaJogo.canvas.width+1, this.Height+1);
+	else if(this.X<0) areaJogo.ctx.fillRect(-1, this.Y-1, (this.X)-areaJogo.canvas.width+1, this.Height+1);
+	
+	areaJogo.ctx.fillRect(this.X-1, this.Y-1, this.Width+1, this.Height+1);
 };
 
 
@@ -58,7 +63,7 @@ JogadorBloco.prototype.turn = function(){
 		}*/
 
 		if(this.TurnH!=0){
-			this.SpeedX=gridX*this.TurnH; this.SpeedY=0;
+			this.SpeedX=gridX*this.TurnH/speedValX; this.SpeedY=0;
 
 			if(this.TurnH>0 && (this.OldSpeedX!=0 || this.OldSpeedY!=0)) {
 				if(this.OldSpeedY>0){
@@ -85,7 +90,7 @@ JogadorBloco.prototype.turn = function(){
 			this.TurnH=0;
 		}
 		else if(this.TurnV!=0){
-			this.SpeedY=gridY*this.TurnV; this.SpeedX=0;
+			this.SpeedY=gridY/speedValY*this.TurnV; this.SpeedX=0;
 
 			if(this.TurnV>0&& (this.OldSpeedX!=0 || this.OldSpeedY!=0)) {
 				if(this.OldSpeedX>0) {
@@ -120,11 +125,20 @@ JogadorBloco.prototype.turn = function(){
 //Adiciona ao prototype do JogadorBloco a func novaPos, isto temos que meter DEPOIS do "JogadorBloco.prototype= Object.create(Entity.prototype);" porque se não
 //ele faz overwrite das funcs todas!!
 JogadorBloco.prototype.newPos = function(){
-	this.X+=this.SpeedX/speedValX; this.Y+=this.SpeedY/speedValY;
+	this.X+=this.SpeedX*speedMult; this.Y+=this.SpeedY*speedMult;
+
+	if(this.X<=0-gridX) this.X=areaJogo.canvas.width-gridX;
+	else if(this.X>=areaJogo.canvas.width) this.X=0;
+	else if(this.Y<=140-gridY) this.Y=areaJogo.canvas.height-gridY;
+	else if(this.Y>=areaJogo.canvas.height) this.Y=140;
 };
 
 JogadorBloco.prototype.checkCollide = function(objeto){
 	if(this.X>=objeto.X+objeto.Width || this.X+this.Width<=objeto.X || this.Y>=objeto.Y+objeto.Height || this.Y+this.Height<=objeto.Y) return false;
+	else if(this.X+this.Width>areaJogo.canvas.width && this.X+this.Width-areaJogo.canvas.width<=objeto.X) return false;
+	else if(this.X<0 && this.X+areaJogo.canvas.width>= objeto.X+objeto.Width) return false;
+	else if(this.Y+this.Height>areaJogo.canvas.height && this.Y+this.Height-areaJogo.canvas.height+140<=objeto.Y) return false;
+	else if(this.Y<140 && this.Y+areaJogo.canvas.height+140>= objeto.Y+objeto.Height) return false;
 	return true;
 };
 
@@ -161,10 +175,15 @@ JogadorCauda.prototype.resume = function(){
 };
 
 JogadorCauda.prototype.newPos = function(){
-	this.X+=this.SpeedX/speedValX; this.Y+=this.SpeedY/speedValY;
+	this.X+=this.SpeedX*speedMult; this.Y+=this.SpeedY*speedMult;
+
+	if(this.X<=0-gridX) this.X=areaJogo.canvas.width-gridX;
+	else if(this.X>=areaJogo.canvas.width) this.X=0;
+	else if(this.Y<=140-gridY) this.Y=areaJogo.canvas.height-gridY;
+	else if(this.Y>=areaJogo.canvas.height) this.Y=140;
 
 	if(this.isRotating!=RotatingEnum.NOT){
-		this.Angle+=(90/speedValX)*this.AngleMult;
+		this.Angle+=(90/speedValX)*this.AngleMult*speedMult;
 
 		if(this.isRotating==RotatingEnum.RIGHTBOTTOM){
 			this.RotationCenterX=this.OldX+this.Width; this.RotationCenterY=this.OldY+this.Height;
@@ -188,6 +207,10 @@ JogadorCauda.prototype.newPos = function(){
 
 JogadorCauda.prototype.update = function(){
 	//if(this.isRotating!=RotatingEnum.NOT) {
+	areaJogo.ctx.fillStyle=this.Color;
+	if(this.X+this.Width>areaJogo.canvas.width) areaJogo.ctx.fillRect(-1, this.Y-1, (this.X+this.Width)-areaJogo.canvas.width+1, this.Height+1);
+	else if(this.X<0) areaJogo.ctx.fillRect((this.X)+areaJogo.canvas.width-1, this.Y-1, this.Width+1, this.Height+1);
+
 	areaJogo.ctx.save();
 	areaJogo.ctx.fillStyle=this.Color;
 	areaJogo.ctx.translate(this.RotationCenterX, this.RotationCenterY);
