@@ -146,9 +146,9 @@ function updateArea(){
 
 	console.log(tamJogador[tamJogador.length-1].SpeedX, 1)
 
-	if(speedFlag==1 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0) {
+	if(speedFlag==1 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0 && caudasNasc==0) {
 		speedMult=1.5;
-	} else if(speedFlag==0) speedMult=1;
+	} else if(speedFlag==0 && caudasNasc==0) speedMult=1;
 
 	//Faz a cauda crescer, depois espera oito frames para fazer crescer outra.
 	if(caudasNasc>0){
@@ -218,9 +218,10 @@ function updateArea(){
 	areaJogo.ctx.fillRect(0, 0, cWidth,140);
 
 	areaJogo.ctx.drawImage(scoreImg, areaJogo.canvas.width-300, 0);
-	areaJogo.ctx.font= 'arial';
+	areaJogo.ctx.font= '52px arial';
 	areaJogo.ctx.fontAlign="center";
-	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+22);
+	areaJogo.ctx.fillStyle="white";
+	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+19);
 
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
