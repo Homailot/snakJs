@@ -12,9 +12,10 @@ var origFrame;
 var score=0;
 var speedFlag=0;
 
-document.fonts.load('10pt "VCR OSD Mono"')
-
 function startup(){
+	
+
+	
 	areaJogo.start();
 }
 
@@ -144,8 +145,6 @@ function updateArea(){
 		}
 	}
 
-	console.log(tamJogador[tamJogador.length-1].SpeedX, 1)
-
 	if(speedFlag==1 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0 && caudasNasc==0) {
 		speedMult=1.5;
 	} else if(speedFlag==0 && caudasNasc==0) speedMult=1;
@@ -187,7 +186,6 @@ function updateArea(){
 			tamJogador[i].AngleMult=tamJogador[i-1].OldAngleMult;
 			tamJogador[i].isRotating=tamJogador[i-1].OldRotate;
 		}
-		console.log(tamJogador[tamJogador.length-1].SpeedX, 2, i)
 		
 		//Update a posicao.
 		tamJogador[i].newPos();

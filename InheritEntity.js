@@ -210,10 +210,49 @@ JogadorCauda.prototype.newPos = function(){
 JogadorCauda.prototype.update = function(){
 	//if(this.isRotating!=RotatingEnum.NOT) {
 	areaJogo.ctx.fillStyle=this.Color;
-	if(this.X+this.Width>areaJogo.canvas.width) areaJogo.ctx.fillRect(-1, this.Y-1, (this.X+this.Width)-areaJogo.canvas.width+1, this.Height+1);
-	else if(this.X<0) areaJogo.ctx.fillRect((this.X)+areaJogo.canvas.width-1, this.Y-1, this.Width+1, this.Height+1);
-	else if(this.Y+this.Height>areaJogo.canvas.height) areaJogo.ctx.fillRect(this.X-1, 139, this.Width+1, this.Y+this.Height-areaJogo.canvas.height+1);
-	else if(this.Y<140) areaJogo.ctx.fillRect(this.X-1, areaJogo.canvas.height+(this.Y-140)-1, this.Width+1, this.Height+1);
+	if(this.OldX+this.Width>=areaJogo.canvas.width) {
+		//areaJogo.ctx.fillRect(-1, this.Y-1, (this.X+this.Width)-areaJogo.canvas.width+1, this.Height+1);
+
+		areaJogo.ctx.save();
+		areaJogo.ctx.fillStyle=this.Color;
+		areaJogo.ctx.translate(this.RotationCenterX-areaJogo.canvas.width, this.RotationCenterY);
+		areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
+		areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
+		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+		areaJogo.ctx.restore();
+	} 
+	else if(this.OldX<=0) {
+
+		areaJogo.ctx.save();
+		areaJogo.ctx.fillStyle=this.Color;
+		areaJogo.ctx.translate(this.RotationCenterX+areaJogo.canvas.width, this.RotationCenterY);
+		areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
+		areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
+		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+		areaJogo.ctx.restore();
+	}
+	else if(this.OldY+this.Height>=areaJogo.canvas.height) {
+		//areaJogo.ctx.fillRect(this.X-1, 139, this.Width+1, this.Y+this.Height-areaJogo.canvas.height+1);
+
+		areaJogo.ctx.save();
+		areaJogo.ctx.fillStyle=this.Color;
+		areaJogo.ctx.translate(this.RotationCenterX, this.RotationCenterY-areaJogo.canvas.height+140);
+		areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
+		areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
+		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+		areaJogo.ctx.restore();
+	}
+	else if(this.OldY<=140) {
+		//areaJogo.ctx.fillRect(this.X-1, areaJogo.canvas.height+(this.Y-140)-1, this.Width+1, this.Height+1);
+
+		areaJogo.ctx.save();
+		areaJogo.ctx.fillStyle=this.Color;
+		areaJogo.ctx.translate(this.RotationCenterX, this.RotationCenterY+areaJogo.canvas.height-140);
+		areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
+		areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
+		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+		areaJogo.ctx.restore();
+	}
 
 	areaJogo.ctx.save();
 	areaJogo.ctx.fillStyle=this.Color;
