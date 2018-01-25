@@ -12,45 +12,11 @@ var origFrame;
 var score=0;
 var speedFlag=0;
 
-function startup(){
-	
-
-	
+//Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
+function startup(){	
 	areaJogo.start();
 }
 
-//Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
-addEventListener("keydown", function(e) {
-	var i;
-
-	switch (e.keyCode) {
-		case 38:
-			if(tamJogador[0].SpeedY==0) {
-				tamJogador[0].TurnV=-1; tamJogador[0].TurnH=0;
-			}
-
-			break;
-		case 40:
-			if(tamJogador[0].SpeedY==0) {
-				tamJogador[0].TurnV=1; tamJogador[0].TurnH=0;
-			}
-
-			break;
-		case 37:
-			if(tamJogador[0].SpeedX==0) {
-				tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
-			}
-
-			break;
-		case 39:
-			if(tamJogador[0].SpeedX==0) {
-				tamJogador[0].TurnH=1; tamJogador[0].TurnV=0;
-			}
-
-			break;
-	}
-
-}, false)
 
 		
 function updateArea(){
