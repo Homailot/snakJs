@@ -15,5 +15,5 @@ function menu() {
 	areaJogo.ctx.fontAlign="center";
 	areaJogo.ctx.fillStyle="white";
 	areaJogo.ctx.fillText("1 JOGADOR", cWidth/2, cHeight/2);*/
-	areaJogo.ctx.drawImage(menu_1, (cWidth/2)-150, cHeight/2-50);
+	areaJogo.ctx.drawImage(menu_1, (cWidth/2)-200, cHeight/2-50);
 }
