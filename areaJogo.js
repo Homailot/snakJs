@@ -41,8 +41,7 @@ var areaJogo = {
 
 		}, false);
 		this.cntFrame = 1;
-		//this.interval = setInterval(updateArea, 25);
-		window.requestAnimationFrame(updateArea);
+		this.interval = setInterval(updateArea, 25);
 
 	},
 	start: function() {
@@ -50,13 +49,13 @@ var areaJogo = {
 		this.canvas.height=window.innerHeight;
 		this.ctx=this.canvas.getContext("2d");
 		document.getElementById("container").insertBefore(this.canvas, document.getElementById("container").childNodes[0]);
-		addEventListener("keydown", function a(e) {
+		addEventListener("keydown", function A(e) {
 			var i;
 
 			switch(e.keyCode) {
 				case 13: 
 					clearInterval(areaJogo.interval);
-					removeEventListener("keydown", a);
+					removeEventListener("keydown", A);
 					areaJogo.beginGame();
 					break;
 			}
