@@ -105,7 +105,7 @@ function updateArea(){
 
 				//Verifica se o jogador ganhou.
 				if(tamJogador.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
-					clearInterval(areaJogo.interval); return;
+					return;
 				}
 			}
 		}
@@ -166,8 +166,7 @@ function updateArea(){
 
 	for(i=3; i<tamJogador.length; i++) {
 		if(tamJogador[0].checkCollide(tamJogador[i])){
-			clearInterval(areaJogo.interval);
-			break;
+			return;
 		}
 	}	
 
@@ -186,7 +185,8 @@ function updateArea(){
 	areaJogo.ctx.fontAlign="center";
 	areaJogo.ctx.fillStyle="white";
 	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+19);
-
+	
+	window.requestAnimationFrame(updateArea);
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
