@@ -1,8 +1,7 @@
-
 var RotatingEnum = {RIGHTBOTTOM: 1, LEFTBOTTOM:2, RIGHTTOP:3, LEFTTOP:4, NOT:5};
 
-var speedValX=6;
-var speedValY=6;
+var speedValX=8;
+var speedValY=8;
 var speedMult=1;
 
 //Construtor Mãe, Um construtor cria objetos, objetos são basicamentes variáveis com muitas variaveis dentro algumas das quais podem ser funcoes.
@@ -231,7 +230,7 @@ JogadorCauda.prototype.update = function(){
 		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
 		areaJogo.ctx.restore();
 	}
-	else if(this.OldY+this.Height>=areaJogo.canvas.height) {
+	if(this.OldY+this.Height>=areaJogo.canvas.height) {
 		//areaJogo.ctx.fillRect(this.X-1, 139, this.Width+1, this.Y+this.Height-areaJogo.canvas.height+1);
 
 		areaJogo.ctx.save();
