@@ -79,6 +79,11 @@ function updateArea(){
 				score+=curEdibles[i].Value;
 
 				if(curEdibles[i].Type==0) {
+					//Verifica se o jogador ganhou.
+					if(tamJogador.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
+						return;
+					}
+
 					cntComida++;
 					if(cntComida%4==0) {
 						if(!curEdibles[1]) spawn(1);
@@ -102,18 +107,13 @@ function updateArea(){
 					setTimeout(function() {speedFlag=0}, 4000)
 					curEdibles.splice(1, 1);
 				}
-
-				//Verifica se o jogador ganhou.
-				if(tamJogador.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
-					return;
-				}
 			}
 		}
 	}
 
 	if(speedFlag==1 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0 && caudasNasc==0) {
-		speedMult=1.5;
-	} else if(speedFlag==0 && caudasNasc==0) speedMult=1;
+		speedMult=1.6;
+	} else if(speedFlag==0 && caudasNasc==0 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0) speedMult=1;
 
 	//Faz a cauda crescer, depois espera oito frames para fazer crescer outra.
 	if(caudasNasc>0){
