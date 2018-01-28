@@ -1,6 +1,7 @@
 var menu_1= new Image();
 menu_1.src="menu_1.fw.png";
-var selected;
+var bg= new Image();
+bg.src="naom_58b44e8732feb.jpg";
 
 function menu() {
 	areaJogo.canvas.width=window.innerWidth;
@@ -9,7 +10,7 @@ function menu() {
 	var cHeight=areaJogo.canvas.height;
 
 	areaJogo.ctx.fillStyle="#042306";
-	areaJogo.ctx.fillRect(0, 0, cWidth, cHeight);
+	areaJogo.ctx.drawImage(bg, 0, 0, cWidth, cHeight);
 
 	/*areaJogo.ctx.font= '52px arial';
 	areaJogo.ctx.fontAlign="center";
