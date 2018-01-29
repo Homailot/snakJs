@@ -16,6 +16,7 @@ var cntComida=0;
 var origFrame;
 var score=0;
 var speedFlag=0;
+var myReq;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
 function startup(){	
@@ -171,12 +172,6 @@ function updateArea(){
 		clearInterval(areaJogo.interval);
 	}*/
 
-	for(i=3; i<tamJogador.length; i++) {
-		if(tamJogador[0].checkCollide(tamJogador[i])){
-			return;
-		}
-	}	
-
 	//Update a imagem.
 	for(i = tamJogador.length-1 ; i>=0; i--){
 		
@@ -193,7 +188,14 @@ function updateArea(){
 	areaJogo.ctx.fillStyle="white";
 	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+19);
 	
-	window.requestAnimationFrame(updateArea);
+	myReq=window.requestAnimationFrame(updateArea);
+
+	for(i=3; i<tamJogador.length; i++) {
+		if(tamJogador[0].checkCollide(tamJogador[i])){
+			cancelAnimationFrame(myReq);
+		}
+	}	
+
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
