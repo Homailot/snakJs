@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Jogo Snake</title>
+	<link rel="icon" href="Blackvariant-Button-Ui-Requests-13-Snake.ico">
 	<!--<img src="6da17dc320f06b1a191f6d3270ba8a4b--oreos-online-games.jpg" >!-->
 	<style type="text/css">
 		body, html {
@@ -16,11 +17,54 @@
 		}
 
 		#container{
+			position: absolute;
 			text-align: center;
+		}
+		#menu{
+			width: 100%;
+			height:100%;
+			position: absolute;
+			background-image: url("naom_58b44e8732feb.jpg");
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
+			overflow: hidden;
+			z-index: 1;
+		}
+
+		span{
+			background-size: 100% 100%;
+			position: absolute;
+			width: 400px;
+			height: 100px;
+			z-index: 2;
+			display: block;
+			cursor: pointer;
+		}
+
+		#butPlayer{
+			background-image: url("menu_1.fw.png");
+			bottom: 110px;	
+		}
+
+		#butPlayer:hover {
+			background-image: url("Menu_1_select.fw.png");
+		}
+
+		#butMulti {
+			background-image: url("menu_2.fw.png");	
+			bottom: 10px;
+		}
+
+		#butMulti:hover {
+			background-image: url("Menu_2_select.fw.png");
 		}
 	</style>
 </head>
-<body onload="startup();">
+<body onload="openMenu();" onmousedown="return false;">
+	<div id="menu">
+		<span id="butPlayer" class="sub"></span>
+		<span id="butMulti" class="sub"></span>
+	</div>
 
 	<div id="container"></div>
 

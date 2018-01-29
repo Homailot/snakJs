@@ -1,5 +1,10 @@
-
+var menu_1= new Image();
+var bg= new Image();
+var menu_1_s= new Image();
 var scoreImg= new Image();
+menu_1.src="menu_1.fw.png";
+bg.src="naom_58b44e8732feb.jpg";
+menu_1_s.src="Menu_1_select.fw.png";
 scoreImg.src="score.fw.png";
 
 var tamJogador = [];
@@ -14,7 +19,9 @@ var speedFlag=0;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
 function startup(){	
-	areaJogo.start();
+	//buttons.push(new btns((innerWidth/2)-200, innerHeight-innerHeight/5, menu_1, menu_1_s, 400, 100));
+
+	areaJogo.beginGame();
 }
 
 

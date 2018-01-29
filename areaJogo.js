@@ -1,10 +1,16 @@
 
 //Este é um objeto, uma variavel com muitas variaveis dentro dela, este objeto é mais para organizaçao. NO ENTANTO objetos sao muito importantes quando sao criados
 //pelos constructors e teem MTA funcionalidade, existem constructors no InheritEntity.
+//var buttons=[];
+
 var areaJogo = {
 	//variavel: valor
 	canvas: document.createElement("canvas"),
 	beginGame: function() {
+		this.canvas.width=window.innerWidth;
+		this.canvas.height=window.innerHeight;
+		this.ctx=this.canvas.getContext("2d");
+		document.getElementById("container").insertBefore(this.canvas, document.getElementById("container").childNodes[0]);
 		this.canvas.width=Math.floor(window.innerWidth/gridX)*gridX;
 		this.canvas.height=140+Math.floor((window.innerHeight-140)/gridY)*gridY;
 		this.ctx=this.canvas.getContext("2d");
@@ -45,27 +51,37 @@ var areaJogo = {
 		window.requestAnimationFrame(updateArea);
 
 	},
-	start: function() {
-		this.canvas.width=window.innerWidth;
-		this.canvas.height=window.innerHeight;
-		this.ctx=this.canvas.getContext("2d");
-		document.getElementById("container").insertBefore(this.canvas, document.getElementById("container").childNodes[0]);
+	/*start: function() {
+		
 		addEventListener("keydown", function a(e) {
 			var i;
 
 			switch(e.keyCode) {
 				case 13: 
-					clearInterval(areaJogo.interval);
+					//clearInterval(areaJogo.interval);
 					removeEventListener("keydown", a);
 					areaJogo.beginGame();
 					break;
 			}
 
 		}, false);
+
+		addEventListener("mousemove", function b(e) {
+			this.mousePos=getMousePos(areaJogo.canvas, e);
+		})
 		this.cntFrame = 1;
-		this.interval = setInterval(menu, 40);
-	},
+		window.requestAnimationFrame(menu);
+	},*/
 	clear: function() {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+	}
+}
+
+function getMousePos(cnv, ev) {
+	var border= cnv.getBoundingClientRect();
+
+	return {
+		x: e.clientX - border.left,
+		y: e.clientY - border.top
 	}
 }
