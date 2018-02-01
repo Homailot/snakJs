@@ -11,12 +11,12 @@ var tamJogador = [];
 var tamJogador2 = [];
 var gridX=30;
 var gridY=30;
-var caudasNasc=0;
+var caudasNasc= [0, 0];
 var curEdibles = [];
-var cntComida=0;
-var origFrame;
+var cntComida= [0, 0];
+var origFrame = [];
 var score=0;
-var speedFlag=0;
+var speedFlag= [0, 0];
 var myReq;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
@@ -28,8 +28,8 @@ function startup(type){
 	var pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 	var pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
 
-	tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", gridX/speedValX*speedMult, 0));
-	tamJogador.push(new JogadorCauda((pX-1)*gridX,  (pY)*gridY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate));
+	tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", gridX/speedValX, 0));
+	tamJogador.push(new JogadorCauda((pX-1)*gridX,  (pY)*gridY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate, tamJogador[0].speedMult));
 
 	spawn(0);
 
@@ -98,8 +98,8 @@ function startup(type){
 
 		}, false);
 
-		tamJogador2.push(new JogadorBloco((pX)*gridX, (pY+2)*gridY, "blue", gridX/speedValX*speedMult, 0));
-		tamJogador2.push(new JogadorCauda((pX-1)*gridX,  (pY+2)*gridY, "black", tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, tamJogador2[0].OldRotate));
+		tamJogador2.push(new JogadorBloco((pX)*gridX, (pY+2)*gridY, "blue", gridX/speedValX, 0));
+		tamJogador2.push(new JogadorCauda((pX-1)*gridX,  (pY+2)*gridY, "black", tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, tamJogador2[0].OldRotate, tamJogador2[0].speedMult));
 	}
 }
 
@@ -118,7 +118,8 @@ function updateArea(){
 
 	//Apaga o frame anterior
 	areaJogo.clear();
-	if(origFrame<speedValX/speedMult)origFrame++;
+	if(origFrame[0]<speedValX/tamJogador[0].speedMult)origFrame[0]++;
+	if(areaJogo.type==2 && origFrame[1]<speedValX/tamJogador2[0].speedMult) origFrame[1]++;
 
 
 	/*areaJogo.ctx.beginPath();
@@ -155,85 +156,63 @@ function updateArea(){
 			curEdibles[i].update();
 
 			if(tamJogador[0].checkCollide(curEdibles[i])){
-				score+=curEdibles[i].Value;
-
-				if(curEdibles[i].Type==0) {
-					//Verifica se o jogador ganhou.
-					if(tamJogador.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
-						return;
-					}
-
-					cntComida++;
-					if(cntComida%4==0) {
-						if(!curEdibles[1]) spawn(1);
-						setTimeout(function() {curEdibles.splice(1, 1)}, 5000);
-					}
-
-
-					if(caudasNasc==0){
-						origFrame=0;
-
-						tamJogador[tamJogador.length-1].stop();
-					}
-
-					caudasNasc+=2;
-
-					spawn(0);
-				} else if(curEdibles[i].Type==1) {
-					//tamJogador.splice(-1, 3);
-
-					speedFlag=1;
-					setTimeout(function() {speedFlag=0}, 4000)
-					curEdibles.splice(1, 1);
-				}
+				eatFood(i, tamJogador, 0);
+			}
+			if(areaJogo.type==2 && curEdibles[i]!=null) {
+				if(tamJogador2[0].checkCollide(curEdibles[i])){
+					eatFood(i, tamJogador2, 1);
+				}	
 			}
 		}
 	}
 
-	if(speedFlag==1 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0 && caudasNasc==0) {
-		speedMult=1.6;
-	} else if(speedFlag==0 && caudasNasc==0 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0) speedMult=1;
+	if(speedFlag[0]==1 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0 && caudasNasc[0]==0) {
+		applySpeed(tamJogador, 1.6);
+	} else if(speedFlag[0]==0 && caudasNasc[0]==0 && tamJogador[0].X%(gridX)==0 && (tamJogador[0].Y-140)%(gridY)==0) applySpeed(tamJogador, 1);
+
+	if(areaJogo.type==2) {
+		if(speedFlag[1]==1 && tamJogador2[0].X%(gridX)==0 && (tamJogador2[0].Y-140)%(gridY)==0 && caudasNasc[1]==0) {
+			applySpeed(tamJogador2, 1.6);
+		} else if(speedFlag[1]==0 && caudasNasc[1]==0 && tamJogador2[0].X%(gridX)==0 && (tamJogador2[0].Y-140)%(gridY)==0) applySpeed(tamJogador2, 1);
+	}
+
 
 	//Faz a cauda crescer, depois espera oito frames para fazer crescer outra.
-	if(caudasNasc>0){
-		if(origFrame>=speedValX/speedMult ){
-			caudasNasc--; origFrame=0;
-			
-			if(caudasNasc==0){
-				tamJogador[tamJogador.length-1].resume();
-			}
-		}
-
-		if(origFrame==0 && caudasNasc!=0){
-			sX=tamJogador[tamJogador.length-1].StopSpeedX;
-			sY=tamJogador[tamJogador.length-1].StopSpeedY;
-
-			tamJogador.splice(tamJogador.length-1, 0, new JogadorCauda(tamJogador[tamJogador.length-1].X, tamJogador[tamJogador.length-1].Y-140, "black", sX, sY, tamJogador[tamJogador.length-1].OldRotate));
-		}
+	if(caudasNasc[0]>0){
+		growTail(tamJogador, 0);
+	}
+	if(areaJogo.type==2 && caudasNasc[1]>0) {
+		growTail(tamJogador2, 1);
 	}
 
 	//Update da posicao da cabeça, aplica as velocidades
 	tamJogador[0].turn();
 	tamJogador[0].newPos();
 
+	if(areaJogo.type==2) {
+		tamJogador2[0].turn();
+		tamJogador2[0].newPos();
+	}
+
 		
 	//Para a cauda seguir o jogador.
 	for(i = 1; i<tamJogador.length; i++) {
 		if(tamJogador[i].X%(gridX)==0 && (tamJogador[i].Y-140)%(gridY)==0 && !(i==tamJogador.length-1 && tamJogador[tamJogador.length-1].SpeedX==0 && tamJogador[tamJogador.length-1].SpeedY==0) ){
-			tamJogador[i].OldSpeedX=tamJogador[i].SpeedX; tamJogador[i].OldSpeedY=tamJogador[i].SpeedY;
-			tamJogador[i].OldAngleMult=tamJogador[i].AngleMult;
-			tamJogador[i].OldX=tamJogador[i].X; tamJogador[i].OldY=tamJogador[i].Y;
-			tamJogador[i].Angle=0;
-			tamJogador[i].OldRotate=tamJogador[i].isRotating;
-
-			tamJogador[i].SpeedX=tamJogador[i-1].OldSpeedX; 
-			tamJogador[i].SpeedY=tamJogador[i-1].OldSpeedY;
-			tamJogador[i].AngleMult=tamJogador[i-1].OldAngleMult;
-			tamJogador[i].isRotating=tamJogador[i-1].OldRotate;
+			tamJogador[i].followLast(tamJogador, i);
 		}
 		
 		//Update a posicao.
 		tamJogador[i].newPos();
+	}
+	if(areaJogo.type==2) {
+		for(i = 1; i<tamJogador2.length; i++) {
+			if(tamJogador2[i].X%(gridX)==0 && (tamJogador2[i].Y-140)%(gridY)==0 && !(i==tamJogador2.length-1 && tamJogador2[tamJogador2.length-1].SpeedX==0 && tamJogador2[tamJogador2.length-1].SpeedY==0) ){
+				tamJogador2[i].followLast(tamJogador2, i);
+			}
+		
+			//Update a posicao.
+			tamJogador2[i].newPos();
+		}
 	}
 
 	
@@ -250,11 +229,9 @@ function updateArea(){
 	if(areaJogo.type==2) {
 		for(i = tamJogador2.length-1 ; i>=0; i--){	
 			tamJogador2[i].update();
-			console.log(i);
 		}
 	}
 
-	console.log(tamJogador2);
 
 
 	//Fazer o background, e 140 pixeis para as tabelas em cima
@@ -272,6 +249,25 @@ function updateArea(){
 	for(i=3; i<tamJogador.length; i++) {
 		if(tamJogador[0].checkCollide(tamJogador[i])){
 			cancelAnimationFrame(myReq);
+		}
+	}
+	if(areaJogo.type==2) {
+		for(i=3; i<tamJogador2.length; i++) {
+			if(tamJogador2[0].checkCollide(tamJogador2[i])){
+				cancelAnimationFrame(myReq);
+			}
+		}
+
+		for(i=1; i<tamJogador.length; i++) {
+			if(tamJogador2[0].checkCollide(tamJogador[i])){
+				cancelAnimationFrame(myReq);
+			}
+		}
+
+		for(i=1; i<tamJogador2.length; i++) {
+			if(tamJogador[0].checkCollide(tamJogador2[i])){
+				cancelAnimationFrame(myReq);
+			}
 		}
 	}	
 
@@ -305,4 +301,63 @@ function spawn(type){
 	
 
 	curEdibles[type] = new Edible((pX)*gridX, (pY)*gridY, type);
+}
+
+function eatFood(pos, player, num) {
+	score+=curEdibles[pos].Value;
+
+	if(curEdibles[pos].Type==0) {
+		//Verifica se o jogador ganhou.
+		if(player.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
+			//MUDAR ISTO!!!!!!
+		}
+
+		cntComida[num]++;
+		if(cntComida[num]%4==0) {
+			if(!curEdibles[1]) spawn(1);
+			setTimeout(function() {curEdibles.splice(1, 1)}, 5000);
+		}
+
+
+		if(caudasNasc[num]==0){
+			origFrame[num]=0;
+
+			player[player.length-1].stop();
+		}
+
+		caudasNasc[num]+=2;
+
+		spawn(0);
+	} else if(curEdibles[pos].Type==1) {
+		//tamJogador.splice(-1, 3);
+
+		speedFlag[num]=1;
+		setTimeout(function() {speedFlag[num]=0}, 4000)
+		curEdibles.splice(1, 1);
+	}
+}
+
+function growTail(player, num) {
+	if(origFrame[num]>=speedValX/player[0].speedMult){
+		caudasNasc[num]--; origFrame[num]=0;
+			
+		if(caudasNasc[num]==0){
+			player[player.length-1].resume();
+		}
+	}
+
+	if(origFrame[num]==0 && caudasNasc[num]!=0){
+		sX=player[player.length-1].StopSpeedX;
+		sY=player[player.length-1].StopSpeedY;
+
+		player.splice(player.length-1, 0, new JogadorCauda(player[player.length-1].X, player[player.length-1].Y-140, "black", sX, sY, player[player.length-1].OldRotate, player[player.length-1].speedMult));
+	}
+}
+
+function applySpeed(player, speed) {
+	var i;
+
+	for(i=0; i<player.length; i++) {
+		player[i].speedMult=speed;
+	}
 }

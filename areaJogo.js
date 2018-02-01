@@ -46,11 +46,3 @@ var areaJogo = {
 	}
 }
 
-function getMousePos(cnv, ev) {
-	var border= cnv.getBoundingClientRect();
-
-	return {
-		x: e.clientX - border.left,
-		y: e.clientY - border.top
-	}
-}

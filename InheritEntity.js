@@ -2,7 +2,6 @@ var RotatingEnum = {RIGHTBOTTOM: 1, LEFTBOTTOM:2, RIGHTTOP:3, LEFTTOP:4, NOT:5};
 
 var speedValX=8;
 var speedValY=8;
-var speedMult=1;
 
 //Construtor Mãe, Um construtor cria objetos, objetos são basicamentes variáveis com muitas variaveis dentro algumas das quais podem ser funcoes.
 function Entity(x, y){
@@ -32,6 +31,7 @@ function JogadorBloco(x, y, color, speedX, speedY){
 	Entity.call(this, x, y);
 
 	this.OldSpeedX=speedX;
+	this.speedMult=1;
 	this.OldSpeedY=speedY;
 	this.SpeedX=speedX;
 	this.SpeedY=speedY;
@@ -126,7 +126,7 @@ JogadorBloco.prototype.turn = function(){
 //Adiciona ao prototype do JogadorBloco a func novaPos, isto temos que meter DEPOIS do "JogadorBloco.prototype= Object.create(Entity.prototype);" porque se não
 //ele faz overwrite das funcs todas!!
 JogadorBloco.prototype.newPos = function(){
-	this.X+=this.SpeedX*speedMult; this.Y+=this.SpeedY*speedMult;
+	this.X+=this.SpeedX*this.speedMult; this.Y+=this.SpeedY*this.speedMult;
 
 	if(this.X<=0-gridX) this.X=areaJogo.canvas.width-gridX;
 	else if(this.X>=areaJogo.canvas.width) this.X=0;
@@ -144,11 +144,12 @@ JogadorBloco.prototype.checkCollide = function(objeto){
 };
 
 
-function JogadorCauda(x, y, color, speedX, speedY, rotation){
+function JogadorCauda(x, y, color, speedX, speedY, rotation, speedMult){
 	JogadorBloco.call(this, x, y, color, speedX, speedY);
 
 	this.StopSpeedX=0;
 	this.StopSpeedY=0;
+	this.speedMult=speedMult;
 	this.OldY=this.Y;
 	this.OldX=this.X;
 	this.RotationOffsetX, this.RotationOffsetY;
@@ -176,7 +177,7 @@ JogadorCauda.prototype.resume = function(){
 };
 
 JogadorCauda.prototype.newPos = function(){
-	this.X+=this.SpeedX*speedMult; this.Y+=this.SpeedY*speedMult;
+	this.X+=this.SpeedX*this.speedMult; this.Y+=this.SpeedY*this.speedMult;
 
 	if(this.X<=0-gridX) this.X=areaJogo.canvas.width-gridX;
 	else if(this.X>=areaJogo.canvas.width) this.X=0;
@@ -184,7 +185,7 @@ JogadorCauda.prototype.newPos = function(){
 	else if(this.Y>=areaJogo.canvas.height) this.Y=140;
 
 	if(this.isRotating!=RotatingEnum.NOT){
-		this.Angle+=(90/speedValX)*this.AngleMult*speedMult;
+		this.Angle+=(90/speedValX)*this.AngleMult*this.speedMult;
 
 		if(this.isRotating==RotatingEnum.RIGHTBOTTOM){
 			this.RotationCenterX=this.OldX+this.Width; this.RotationCenterY=this.OldY+this.Height;
@@ -204,6 +205,19 @@ JogadorCauda.prototype.newPos = function(){
 		this.RotationOffsetX=this.Width/2; this.RotationOffsetY=this.Height/2;
 	}
 	
+};
+
+JogadorCauda.prototype.followLast = function(arr, pos){
+	this.OldSpeedX=this.SpeedX; this.OldSpeedY=this.SpeedY;
+	this.OldAngleMult=this.AngleMult;
+	this.OldX=this.X; this.OldY = this.Y;
+	this.Angle=0;
+	this.OldRotate=this.isRotating;
+
+	this.SpeedX=arr[pos-1].OldSpeedX; 
+	this.SpeedY=arr[pos-1].OldSpeedY;
+	this.AngleMult=arr[pos-1].OldAngleMult;
+	this.isRotating=arr[pos-1].OldRotate;
 };
 
 JogadorCauda.prototype.update = function(){
