@@ -43,6 +43,14 @@ function show(el) {
 function hide(el) {
 	el.style.backgroundImage = "none";
 	el.style.display = "hide";
+
+	var subs= el.getElementsByClassName("sub");
+
+	for(var i = 0; i < subs.length; i++)  {
+		subs[i].style.display="hide";
+		subs[i].style.backgroundImage = "none";
+		subs[i].style.cursor= "auto";
+	}
 }
 
 function openMenu() {
@@ -65,15 +73,14 @@ function openMenu() {
 
 document.getElementById("butPlayer").addEventListener("click", function startGame() {
 	hide(document.getElementById("menu"));
-	var subs= document.getElementById("menu").getElementsByClassName("sub");
-
-	for(var i = 0; i < subs.length; i++)  {
-		subs[i].style.display="hide";
-		subs[i].style.backgroundImage = "none";
-		subs[i].style.cursor= "auto";
-	}
-
-	startup();
+	startup(1);
 
 	document.getElementById("butPlayer").removeEventListener("click", startGame);
+})
+
+document.getElementById("butMulti").addEventListener("click", function startMulti() {
+	hide(document.getElementById("menu"));
+	startup(2);
+
+	document.getElementById("butMulti").removeEventListener("click", startMulti);
 })

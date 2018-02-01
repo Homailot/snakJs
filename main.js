@@ -8,6 +8,7 @@ menu_1_s.src="Menu_1_select.fw.png";
 scoreImg.src="score.fw.png";
 
 var tamJogador = [];
+var tamJogador2 = [];
 var gridX=30;
 var gridY=30;
 var caudasNasc=0;
@@ -19,10 +20,87 @@ var speedFlag=0;
 var myReq;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
-function startup(){	
+function startup(type){	
 	//buttons.push(new btns((innerWidth/2)-200, innerHeight-innerHeight/5, menu_1, menu_1_s, 400, 100));
 
-	areaJogo.beginGame();
+	areaJogo.beginGame(type);
+
+	var pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
+	var pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
+
+	tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", gridX/speedValX*speedMult, 0));
+	tamJogador.push(new JogadorCauda((pX-1)*gridX,  (pY)*gridY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate));
+
+	spawn(0);
+
+	addEventListener("keydown", function(e) {
+			var i;
+
+			switch (e.keyCode) {
+				case 38:
+					if(tamJogador[0].SpeedY==0) {
+						tamJogador[0].TurnV=-1; tamJogador[0].TurnH=0;
+					}
+
+					break;
+				case 40:
+					if(tamJogador[0].SpeedY==0) {
+						tamJogador[0].TurnV=1; tamJogador[0].TurnH=0;
+					}
+
+					break;
+				case 37:
+					if(tamJogador[0].SpeedX==0) {
+						tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
+					}
+
+					break;
+				case 39:
+					if(tamJogador[0].SpeedX==0) {
+						tamJogador[0].TurnH=1; tamJogador[0].TurnV=0;
+					}
+
+					break;
+			}
+
+		}, false);
+
+	if(type==2) {
+		addEventListener("keydown", function(e) {
+			var i;
+
+			switch (e.keyCode) {
+				case 87:
+					if(tamJogador2[0].SpeedY==0) {
+						tamJogador2[0].TurnV=-1; tamJogador2[0].TurnH=0;
+					}
+
+					break;
+				case 83:
+					if(tamJogador2[0].SpeedY==0) {
+						tamJogador2[0].TurnV=1; tamJogador2[0].TurnH=0;
+					}
+
+					break;
+				case 65:
+					if(tamJogador2[0].SpeedX==0) {
+						tamJogador2[0].TurnH=-1; tamJogador2[0].TurnV=0;
+					}
+
+					break;
+				case 68:
+					if(tamJogador2[0].SpeedX==0) {
+						tamJogador2[0].TurnH=1; tamJogador2[0].TurnV=0;
+					}
+
+					break;
+			}
+
+		}, false);
+
+		tamJogador2.push(new JogadorBloco((pX)*gridX, (pY+2)*gridY, "blue", gridX/speedValX*speedMult, 0));
+		tamJogador2.push(new JogadorCauda((pX-1)*gridX,  (pY+2)*gridY, "black", tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, tamJogador2[0].OldRotate));
+	}
 }
 
 
@@ -68,13 +146,6 @@ function updateArea(){
 	//Cria a cabeça da cobra.
 	if(areaJogo.cntFrame==1) {
 		areaJogo.cntFrame++;
-		pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
-		pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
-
-		tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", gridX/speedValX*speedMult, 0));
-		tamJogador.push(new JogadorCauda((pX-1)*gridX,  (pY)*gridY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate));
-
-		spawn(0);
 	}
 
 
@@ -173,10 +244,18 @@ function updateArea(){
 	}*/
 
 	//Update a imagem.
-	for(i = tamJogador.length-1 ; i>=0; i--){
-		
+	for(i = tamJogador.length-1 ; i>=0; i--){	
 		tamJogador[i].update();
 	}
+	if(areaJogo.type==2) {
+		for(i = tamJogador2.length-1 ; i>=0; i--){	
+			tamJogador2[i].update();
+			console.log(i);
+		}
+	}
+
+	console.log(tamJogador2);
+
 
 	//Fazer o background, e 140 pixeis para as tabelas em cima
 	areaJogo.ctx.fillStyle= "#568929";
