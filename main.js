@@ -18,9 +18,24 @@ var origFrame = [];
 var score=0;
 var speedFlag= [0, 0];
 var myReq;
+var startedGame=0;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
 function startup(type){	
+	//document.getElementById("butPlayer").removeEventListener("click", startGame);
+	//document.getElementById("butMulti").removeEventListener("click", startMulti);
+
+	tamJogador = [];
+	tamJogador2 = [];
+	gridX=30;
+	gridY=30;
+	caudasNasc= [0, 0];
+	curEdibles = [];
+	cntComida= [0, 0];
+	origFrame = [];
+	score=0;
+	speedFlag= [0, 0];
+	startedGame=1;
 	//buttons.push(new btns((innerWidth/2)-200, innerHeight-innerHeight/5, menu_1, menu_1_s, 400, 100));
 
 	areaJogo.beginGame(type);
@@ -243,34 +258,50 @@ function updateArea(){
 	areaJogo.ctx.fontAlign="center";
 	areaJogo.ctx.fillStyle="white";
 	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+19);
-	
-	myReq=window.requestAnimationFrame(updateArea);
 
 	for(i=3; i<tamJogador.length; i++) {
 		if(tamJogador[0].checkCollide(tamJogador[i])){
-			cancelAnimationFrame(myReq);
+			stop();
+			alert("P2 Ganha");
+			openMenu();
+			document.getElementById("container").innerHTML="";
 		}
 	}
 	if(areaJogo.type==2) {
 		for(i=3; i<tamJogador2.length; i++) {
 			if(tamJogador2[0].checkCollide(tamJogador2[i])){
-				cancelAnimationFrame(myReq);
+				stop();
+				alert("P1 Ganha");
+				openMenu();
+				document.getElementById("container").innerHTML="";
 			}
 		}
 
 		for(i=1; i<tamJogador.length; i++) {
 			if(tamJogador2[0].checkCollide(tamJogador[i])){
-				cancelAnimationFrame(myReq);
+				stop();
+				alert("P1 Ganha");
+				openMenu();
+				document.getElementById("container").innerHTML="";
 			}
 		}
 
 		for(i=1; i<tamJogador2.length; i++) {
 			if(tamJogador[0].checkCollide(tamJogador2[i])){
-				cancelAnimationFrame(myReq);
+				stop();
+				alert("P2 Ganha");
+				openMenu();
+				document.getElementById("container").innerHTML="";
 			}
 		}
-	}	
+	}
 
+	if(startedGame==0) {
+		console.log("stopped") 
+		return;
+	}
+	
+	myReq=window.requestAnimationFrame(updateArea);
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
@@ -360,4 +391,10 @@ function applySpeed(player, speed) {
 	for(i=0; i<player.length; i++) {
 		player[i].speedMult=speed;
 	}
+}
+
+function stop() {
+	window.cancelAnimationFrame(myReq);
+
+	myReq=0;
 }

@@ -5,11 +5,8 @@
 
 var areaJogo = {
 	//variavel: valor
-	canvas: document.createElement("canvas"),
 	beginGame: function(type) {
-		this.canvas.width=window.innerWidth;
-		this.canvas.height=window.innerHeight;
-		this.ctx=this.canvas.getContext("2d");
+		this.canvas=document.createElement("canvas");
 		document.getElementById("container").insertBefore(this.canvas, document.getElementById("container").childNodes[0]);
 		this.canvas.width=Math.floor(window.innerWidth/gridX)*gridX;
 		this.canvas.height=140+Math.floor((window.innerHeight-140)/gridY)*gridY;
@@ -17,7 +14,7 @@ var areaJogo = {
 		this.cntFrame = 1;
 		this.type=type;
 		//this.interval = setInterval(updateArea, 25);
-		window.requestAnimationFrame(updateArea);
+		myReq = window.requestAnimationFrame(updateArea);
 
 	},
 	/*start: function() {
