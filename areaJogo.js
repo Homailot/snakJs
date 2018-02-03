@@ -14,7 +14,7 @@ var areaJogo = {
 		this.cntFrame = 1;
 		this.type=type;
 		//this.interval = setInterval(updateArea, 25);
-		myReq = window.requestAnimationFrame(updateArea);
+		this.myReq = requestAnimationFrame(updateArea);
 
 	},
 	/*start: function() {

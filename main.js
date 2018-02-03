@@ -17,7 +17,6 @@ var cntComida= [0, 0];
 var origFrame = [];
 var score=0;
 var speedFlag= [0, 0];
-var myReq;
 var startedGame=0;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
@@ -121,6 +120,8 @@ function startup(type){
 
 		
 function updateArea(){
+
+	
 	var py, px;
 	var posX, posY;
 	var sX, sy;
@@ -265,6 +266,7 @@ function updateArea(){
 			alert("P2 Ganha");
 			openMenu();
 			document.getElementById("container").innerHTML="";
+			return;
 		}
 	}
 	if(areaJogo.type==2) {
@@ -300,8 +302,10 @@ function updateArea(){
 		console.log("stopped") 
 		return;
 	}
-	
-	myReq=window.requestAnimationFrame(updateArea);
+
+	console.log(areaJogo.myReq);
+	areaJogo.myReq=requestAnimationFrame(updateArea);
+
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
@@ -394,7 +398,7 @@ function applySpeed(player, speed) {
 }
 
 function stop() {
-	window.cancelAnimationFrame(myReq);
+	cancelAnimationFrame(areaJogo.myReq);
 
-	myReq=0;
+	areaJogo.myReq=undefined;
 }
