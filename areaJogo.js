@@ -1,4 +1,4 @@
-
+﻿
 //Este é um objeto, uma variavel com muitas variaveis dentro dela, este objeto é mais para organizaçao. NO ENTANTO objetos sao muito importantes quando sao criados
 //pelos constructors e teem MTA funcionalidade, existem constructors no InheritEntity.
 //var buttons=[];

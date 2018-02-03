@@ -58,15 +58,9 @@ function openMenu() {
 	document.getElementById('menu').style.backgroundImage = "url(naom_58b44e8732feb.jpg)";
 	startedGame=0;
 
-	document.getElementById("butPlayer").addEventListener("click", function startGame() {
-		hide(document.getElementById("menu"));
-		startup(1);	
-	})
+	document.getElementById("butPlayer").addEventListener("click", startGame);
+	document.getElementById("butMulti").addEventListener("click", startMulti);
 
-	document.getElementById("butMulti").addEventListener("click", function startMulti() {
-		hide(document.getElementById("menu"));
-		startup(2);
-	})
 
 	//document.getElementById("butPlayer").style.backgroundImage = "url(menu_1.fw.png)";
 	//document.getElementById("butMulti").style.backgroundImage = "url(menu_2.fw.png)";
@@ -88,3 +82,12 @@ function openMenu() {
 	})
 }
 
+function startGame() {
+	hide(document.getElementById("menu"));
+	startup(1);
+}
+
+function startMulti() {
+	hide(document.getElementById("menu"));
+	startup(2);
+}

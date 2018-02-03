@@ -1,4 +1,4 @@
-var menu_1= new Image();
+﻿var menu_1= new Image();
 var bg= new Image();
 var menu_1_s= new Image();
 var scoreImg= new Image();
@@ -21,8 +21,8 @@ var startedGame=0;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
 function startup(type){	
-	//document.getElementById("butPlayer").removeEventListener("click", startGame);
-	//document.getElementById("butMulti").removeEventListener("click", startMulti);
+	document.getElementById("butPlayer").removeEventListener("click", startGame);
+	document.getElementById("butMulti").removeEventListener("click", startMulti);
 
 	tamJogador = [];
 	tamJogador2 = [];
@@ -260,12 +260,14 @@ function updateArea(){
 	areaJogo.ctx.fillStyle="white";
 	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+19);
 
+	areaJogo.myReq=requestAnimationFrame(updateArea);
+
 	for(i=3; i<tamJogador.length; i++) {
 		if(tamJogador[0].checkCollide(tamJogador[i])){
 			stop();
 			alert("P2 Ganha");
-			openMenu();
 			document.getElementById("container").innerHTML="";
+			openMenu();
 			return;
 		}
 	}
@@ -275,7 +277,8 @@ function updateArea(){
 				stop();
 				alert("P1 Ganha");
 				openMenu();
-				document.getElementById("container").innerHTML="";
+				document.getElementById("container").innerHTML=""
+				return;
 			}
 		}
 
@@ -298,13 +301,7 @@ function updateArea(){
 		}
 	}
 
-	if(startedGame==0) {
-		console.log("stopped") 
-		return;
-	}
-
 	console.log(areaJogo.myReq);
-	areaJogo.myReq=requestAnimationFrame(updateArea);
 
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
@@ -399,6 +396,4 @@ function applySpeed(player, speed) {
 
 function stop() {
 	cancelAnimationFrame(areaJogo.myReq);
-
-	areaJogo.myReq=undefined;
 }

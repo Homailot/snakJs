@@ -1,4 +1,4 @@
-var RotatingEnum = {RIGHTBOTTOM: 1, LEFTBOTTOM:2, RIGHTTOP:3, LEFTTOP:4, NOT:5};
+﻿var RotatingEnum = {RIGHTBOTTOM: 1, LEFTBOTTOM:2, RIGHTTOP:3, LEFTTOP:4, NOT:5};
 
 var speedValX=8;
 var speedValY=8;
