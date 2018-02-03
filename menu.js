@@ -1,41 +1,3 @@
-/*function btns(x, y, img1, selectImg, width, height) {
-	this.x=x;
-	this.y=y;
-	this.img1=img1;
-	this.selectImg=selectImg;
-	this.width=width;
-	this.height=height;
-	this.img=this.img1;
-}
-
-btns.prototype.checkHover = function(mPos) {
-	if(mPos.x>this.x && mPos.x<this.x+this.width && mPos.y>this.y && mPos.y<this.y+this.height) return 1;
-	return -1;
-};
-
-btns.prototype.update = function() {
-	areaJogo.ctx.drawImage(this.img, this.x, this.y);
-};
-
-function menu() {
-	var i=0;
-
-	areaJogo.canvas.width=window.innerWidth;
-	areaJogo.canvas.height=window.innerHeight;
-	var cWidth=areaJogo.canvas.width;
-	var cHeight=areaJogo.canvas.height;
-
-	areaJogo.ctx.fillStyle="#042306";
-	areaJogo.ctx.drawImage(areaJogo.bg, 0, 0, cWidth, cHeight);
-
-	for(i=0; i<buttons.length; i++) {
-		buttons[i].update();
-	}
-	//areaJogo.ctx.drawImage(menu_1, (cWidth/2)-200, cHeight-cHeight/5);
-
-	window.requestAnimationFrame(menu);
-}*/
-
 function show(el) {
 	el.style.display = 'block';
 }
@@ -84,10 +46,10 @@ function openMenu() {
 
 function startGame() {
 	hide(document.getElementById("menu"));
-	startup(1);
+	startup(1, 1);
 }
 
 function startMulti() {
 	hide(document.getElementById("menu"));
-	startup(2);
+	startup(2, 1);
 }

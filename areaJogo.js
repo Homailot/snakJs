@@ -17,27 +17,6 @@ var areaJogo = {
 		this.myReq = requestAnimationFrame(updateArea);
 
 	},
-	/*start: function() {
-		
-		addEventListener("keydown", function a(e) {
-			var i;
-
-			switch(e.keyCode) {
-				case 13: 
-					//clearInterval(areaJogo.interval);
-					removeEventListener("keydown", a);
-					areaJogo.beginGame();
-					break;
-			}
-
-		}, false);
-
-		addEventListener("mousemove", function b(e) {
-			this.mousePos=getMousePos(areaJogo.canvas, e);
-		})
-		this.cntFrame = 1;
-		window.requestAnimationFrame(menu);
-	},*/
 	clear: function() {
 		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 	}

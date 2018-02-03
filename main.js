@@ -18,9 +18,13 @@ var origFrame = [];
 var score=0;
 var speedFlag= [0, 0];
 var startedGame=0;
+var loadedLvls = [];
+var lvl; var win;
+var p1SX, p1SY;
+var p2SX, p2SY;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
-function startup(type){	
+function startup(type, l){	
 	document.getElementById("butPlayer").removeEventListener("click", startGame);
 	document.getElementById("butMulti").removeEventListener("click", startMulti);
 
@@ -34,42 +38,48 @@ function startup(type){
 	origFrame = [];
 	score=0;
 	speedFlag= [0, 0];
-	startedGame=1;
-	//buttons.push(new btns((innerWidth/2)-200, innerHeight-innerHeight/5, menu_1, menu_1_s, 400, 100));
+	loadedLvls = [];
+	win = 0;
 
 	areaJogo.beginGame(type);
 
-	var pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
-	var pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));
+	lvl=changeLvl(l);
 
-	tamJogador.push(new JogadorBloco((pX)*gridX, (pY)*gridY, "blue", gridX/speedValX, 0));
-	tamJogador.push(new JogadorCauda((pX-1)*gridX,  (pY)*gridY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate, tamJogador[0].speedMult));
+	lvl.load(0, 0);
+	lvl.resize();
+	loadedLvls.push(lvl);
 
-	spawn(0);
+	startedGame=1;
+
+	/*var pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
+	var pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));*/
+
+	tamJogador.push(new JogadorBloco(p1SX, p1SY, "blue", gridX/speedValX, 0));
+	tamJogador.push(new JogadorCauda(p1SX-gridX,  p1SY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate, tamJogador[0].speedMult));
 
 	addEventListener("keydown", function(e) {
 			var i;
 
 			switch (e.keyCode) {
-				case 38:
+				case 87:
 					if(tamJogador[0].SpeedY==0) {
 						tamJogador[0].TurnV=-1; tamJogador[0].TurnH=0;
 					}
 
 					break;
-				case 40:
+				case 83:
 					if(tamJogador[0].SpeedY==0) {
 						tamJogador[0].TurnV=1; tamJogador[0].TurnH=0;
 					}
 
 					break;
-				case 37:
+				case 65:
 					if(tamJogador[0].SpeedX==0) {
 						tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
 					}
 
 					break;
-				case 39:
+				case 68:
 					if(tamJogador[0].SpeedX==0) {
 						tamJogador[0].TurnH=1; tamJogador[0].TurnV=0;
 					}
@@ -84,25 +94,25 @@ function startup(type){
 			var i;
 
 			switch (e.keyCode) {
-				case 87:
+				case 38:
 					if(tamJogador2[0].SpeedY==0) {
 						tamJogador2[0].TurnV=-1; tamJogador2[0].TurnH=0;
 					}
 
 					break;
-				case 83:
+				case 40:
 					if(tamJogador2[0].SpeedY==0) {
 						tamJogador2[0].TurnV=1; tamJogador2[0].TurnH=0;
 					}
 
 					break;
-				case 65:
+				case 37:
 					if(tamJogador2[0].SpeedX==0) {
 						tamJogador2[0].TurnH=-1; tamJogador2[0].TurnV=0;
 					}
 
 					break;
-				case 68:
+				case 39:
 					if(tamJogador2[0].SpeedX==0) {
 						tamJogador2[0].TurnH=1; tamJogador2[0].TurnV=0;
 					}
@@ -112,9 +122,12 @@ function startup(type){
 
 		}, false);
 
-		tamJogador2.push(new JogadorBloco((pX)*gridX, (pY+2)*gridY, "blue", gridX/speedValX, 0));
-		tamJogador2.push(new JogadorCauda((pX-1)*gridX,  (pY+2)*gridY, "black", tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, tamJogador2[0].OldRotate, tamJogador2[0].speedMult));
+		tamJogador2.push(new JogadorBloco(p2SX, p2SY, "blue", -gridX/speedValX, 0));
+		tamJogador2.push(new JogadorCauda(p2SX+gridX,  p2SY, "black", tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, tamJogador2[0].OldRotate, tamJogador2[0].speedMult));
 	}
+
+
+	spawn(0);
 }
 
 
@@ -136,13 +149,6 @@ function updateArea(){
 	areaJogo.clear();
 	if(origFrame[0]<speedValX/tamJogador[0].speedMult)origFrame[0]++;
 	if(areaJogo.type==2 && origFrame[1]<speedValX/tamJogador2[0].speedMult) origFrame[1]++;
-
-
-	/*areaJogo.ctx.beginPath();
-	areaJogo.ctx.moveTo(0, 140);
-	areaJogo.ctx.lineTo(cWidth, 140);
-	areaJogo.ctx.strokeStyle="black";
-	areaJogo.ctx.stroke();*/
 
 	//Criar a grelha de fundo de jogo... é um bocado complicado de explicar
 	var rectColor="#47F73E";
@@ -231,13 +237,6 @@ function updateArea(){
 		}
 	}
 
-	
-
-	//Check colisões
-	/*if(tamJogador[0].X+tamJogador[0].Width>areaJogo.canvas.width || tamJogador[0].X<0 || tamJogador[0].Y+tamJogador[0].Height>areaJogo.canvas.height ||tamJogador[0].Y<140){
-		clearInterval(areaJogo.interval);
-	}*/
-
 	//Update a imagem.
 	for(i = tamJogador.length-1 ; i>=0; i--){	
 		tamJogador[i].update();
@@ -248,7 +247,12 @@ function updateArea(){
 		}
 	}
 
-
+	for(i=0; i<loadedLvls.length; i++) {
+		if(loadedLvls[i].loaded) {
+			loadedLvls[i].resize();
+			loadedLvls[i].update();
+		}
+	}
 
 	//Fazer o background, e 140 pixeis para as tabelas em cima
 	areaJogo.ctx.fillStyle= "#568929";
@@ -262,46 +266,48 @@ function updateArea(){
 
 	areaJogo.myReq=requestAnimationFrame(updateArea);
 
-	for(i=3; i<tamJogador.length; i++) {
-		if(tamJogador[0].checkCollide(tamJogador[i])){
-			stop();
-			alert("P2 Ganha");
-			document.getElementById("container").innerHTML="";
-			openMenu();
-			return;
-		}
+	if(arrCollision(tamJogador[0], tamJogador, 3)){
+		stop(); win=2;
 	}
+
+	if(arrCollision(tamJogador[0], loadedLvls[0].obstacles, 0)){
+		stop(); win=2;
+	}
+
+	if(loadedLvls[0].borderRight!=false && tamJogador[0].checkCollide(loadedLvls[0].borderRight)) {stop(); win=2;}
+	if(loadedLvls[0].borderLeft!=false && tamJogador[0].checkCollide(loadedLvls[0].borderLeft)) {stop(); win=2;}
+	if(loadedLvls[0].borderTop!=false && tamJogador[0].checkCollide(loadedLvls[0].borderTop)) {stop(); win=2;}
+	if(loadedLvls[0].borderBot!=false && tamJogador[0].checkCollide(loadedLvls[0].borderBot)) {stop(); win=2;}
+
 	if(areaJogo.type==2) {
-		for(i=3; i<tamJogador2.length; i++) {
-			if(tamJogador2[0].checkCollide(tamJogador2[i])){
-				stop();
-				alert("P1 Ganha");
-				openMenu();
-				document.getElementById("container").innerHTML=""
-				return;
-			}
+		if(arrCollision(tamJogador2[0], tamJogador2, 3)){
+			stop(); win=1;
 		}
 
-		for(i=1; i<tamJogador.length; i++) {
-			if(tamJogador2[0].checkCollide(tamJogador[i])){
-				stop();
-				alert("P1 Ganha");
-				openMenu();
-				document.getElementById("container").innerHTML="";
-			}
+		if(arrCollision(tamJogador2[0], tamJogador, 1)) {
+			stop(); win=1;
 		}
 
-		for(i=1; i<tamJogador2.length; i++) {
-			if(tamJogador[0].checkCollide(tamJogador2[i])){
-				stop();
-				alert("P2 Ganha");
-				openMenu();
-				document.getElementById("container").innerHTML="";
-			}
+		if(arrCollision(tamJogador[0], tamJogador2, 1)) {
+			stop(); win=2;
 		}
+
+		if(arrCollision(tamJogador2[0], loadedLvls[0].obstacles, 0)){
+			stop(); win=1;
+		}
+
+		if(loadedLvls[0].borderRight!=false && tamJogador2[0].checkCollide(loadedLvls[0].borderRight)) {stop(); win=1;}
+		if(loadedLvls[0].borderLeft!=false && tamJogador2[0].checkCollide(loadedLvls[0].borderLeft)) {stop(); win=1;}
+		if(loadedLvls[0].borderTop!=false && tamJogador2[0].checkCollide(loadedLvls[0].borderTop)) {stop(); win=1;}
+		if(loadedLvls[0].borderBot!=false && tamJogador2[0].checkCollide(loadedLvls[0].borderBot)) {stop(); win=1;}
 	}
 
-	console.log(areaJogo.myReq);
+	if(startedGame==0) {
+		alert("P" + win + " Ganha");
+		document.getElementById("container").innerHTML="";
+		openMenu();
+		return;
+	}
 
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
@@ -309,29 +315,34 @@ function updateArea(){
 function spawn(type){
 	var pY, pX;
 	var right, left, down, up;
-	var otherLeft, otherDown, otherUp, otherRight;
-	var f=0;
+	var f=0; var i;
 
-	while(f==0){
+	while(f<=0){
 		pY = Math.floor(Math.random()*Math.floor((areaJogo.canvas.height-140)/gridY));
 		pX = Math.floor(Math.random()*(Math.floor(areaJogo.canvas.width/gridX)));
 		right = pX*gridX+gridX; left = pX*gridX; down=pY*gridY+gridY + 140; up=pY*gridY + 140;
 
 		f=1;
-		for(var i=0; i<tamJogador.length; i++){
-			otherRight = tamJogador[i].X+(tamJogador[i].Width);
-			otherLeft = tamJogador[i].X;
-			otherDown = tamJogador[i].Y+(tamJogador[i].Height);
-			otherUp= tamJogador[i].Y;
 
-			if(!(left>=otherRight || right<=otherLeft || up>=otherDown || down<=otherUp)) {
-				f=0; 
-				break;
-			}
-		}			
+		for(i=0; i<tamJogador.length; i++) {
+			f-=spawnCheck(right, left, down, up, tamJogador[i]);
+		}
+		
+		for(i=0; i<tamJogador2.length; i++) {
+			f-=spawnCheck(right, left, down, up, tamJogador2[i]);
+		}
+
+		for(i=0; i<loadedLvls[0].obstacles.length; i++) {
+			f-=spawnCheck(right, left, down, up, loadedLvls[0].obstacles[i]);
+		}
+
+
+		if(loadedLvls[0].borderRight!=false) f-=spawnCheck(right, left, down, up, loadedLvls[0].borderRight);
+		if(loadedLvls[0].borderLeft!=false) f-=spawnCheck(right, left, down, up, loadedLvls[0].borderLeft);
+		if(loadedLvls[0].borderTop!=false) f-=spawnCheck(right, left, down, up, loadedLvls[0].borderTop);
+		if(loadedLvls[0].borderBot!=false) f-=spawnCheck(right, left, down, up, loadedLvls[0].borderBot);
+				
 	}
-	
-
 	curEdibles[type] = new Edible((pX)*gridX, (pY)*gridY, type);
 }
 
@@ -396,4 +407,26 @@ function applySpeed(player, speed) {
 
 function stop() {
 	cancelAnimationFrame(areaJogo.myReq);
+	startedGame=0;
+}
+
+function arrCollision(obj, arr, startPos) {
+	for(i=startPos; i<arr.length; i++) {
+		if(obj.checkCollide(arr[i])) return true;
+	}
+
+	return false;
+}
+
+function spawnCheck(right, left, down, up, obj) {
+	var otherRight = obj.X+(obj.Width);
+	var otherLeft = obj.X;
+	var otherDown = obj.Y+(obj.Height);
+	var otherUp= obj.Y;
+
+	if(!(left>=otherRight || right<=otherLeft || up>=otherDown || down<=otherUp)) {
+		return 1;
+	}
+
+	return 0;		
 }

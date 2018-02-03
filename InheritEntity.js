@@ -9,6 +9,7 @@ function Entity(x, y){
 	this.Y = y+(140);
 	this.Width = gridX;
 	this.Height = gridY;
+	this.Color;
 }
 
 //A razao pela qual eu meto as funcoes nos prototypes dos construtores e nao nos construtores em si (posso te explicar dps mais tarde se quiseres) e pk
@@ -302,4 +303,21 @@ Edible.prototype.constructor=Edible;
 
 Edible.prototype.delete = function(){
 	this.Type=null;
+};
+
+function Obstacle(x, y, width, height){
+	Entity.call(this, x, y);
+
+	this.Width=width;
+	this.Height=height;
+	this.SpeedX=0;
+	this.Color="#0E4402";
+	this.SpeedY=0;
+}
+
+Obstacle.prototype= Object.create(Entity.prototype);
+Obstacle.prototype.constructor=Obstacle;
+
+Obstacle.prototype.newPos = function(){
+	this.X+=this.SpeedX; this.Y+=this.SpeedY;
 };
