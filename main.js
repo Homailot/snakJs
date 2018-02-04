@@ -25,9 +25,6 @@ var p2SX, p2SY;
 
 //Faz um "onkeydown" na pagina e devolve um "e" para a funcao que acontece apos de pressionar numa tecla.
 function startup(type, l){	
-	document.getElementById("butPlayer").removeEventListener("click", startGame);
-	document.getElementById("butMulti").removeEventListener("click", startMulti);
-
 	tamJogador = [];
 	tamJogador2 = [];
 	gridX=30;
@@ -267,11 +264,17 @@ function updateArea(){
 	areaJogo.myReq=requestAnimationFrame(updateArea);
 
 	if(arrCollision(tamJogador[0], tamJogador, 3)){
-		stop(); win=2;
+		stop();
+
+		if(areaJogo.type==2) win=2; 
+		else win=-1;
 	}
 
 	if(arrCollision(tamJogador[0], loadedLvls[0].obstacles, 0)){
-		stop(); win=2;
+		stop();
+
+		if(areaJogo.type==2) win=2; 
+		else win=-1;
 	}
 
 	if(loadedLvls[0].borderRight!=false && tamJogador[0].checkCollide(loadedLvls[0].borderRight)) {stop(); win=2;}
@@ -303,12 +306,20 @@ function updateArea(){
 	}
 
 	if(startedGame==0) {
-		alert("P" + win + " Ganha");
-		document.getElementById("container").innerHTML="";
-		openMenu();
-		return;
-	}
+		var d = document.createElement("div");
+		d.id='deathOverlay';
+		d.style.width=areaJogo.canvas.width + "px";
+		d.style.height=areaJogo.canvas.height + "px";d.style.display = 'block';
 
+		document.getElementById('container').insertBefore(d, document.getElementById('container').childNodes[0]);
+
+		if(win==-1) document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Perdeste!</h1>"
+		else document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Ganhou o Jogador "+ win+ "!</h1>";
+		
+
+		document.getElementById("deathOverlay").innerHTML+="<span id='exit' onclick='openMenu();'></span>";
+		document.getElementById("exit").style.left = areaJogo.canvas.width/2-200 + "px"; document.getElementById("exit").style.bottom = '10px'
+	}
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
 //Uma nova maca e criada em cada 400 frames, defenidos no areaJogo.js, e devia de ser apagada apos 4 segundos mas nao esta a dar por alguma razao.
