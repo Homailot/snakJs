@@ -260,7 +260,7 @@ function updateArea(){
 
 	areaJogo.ctx.drawImage(scoreImg, areaJogo.canvas.width-300, 0);
 	areaJogo.ctx.font= '52px arial';
-	areaJogo.ctx.fontAlign="center";
+	//areaJogo.ctx.fontAlign="center";
 	areaJogo.ctx.fillStyle="white";
 	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+19);
 

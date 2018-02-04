@@ -46,10 +46,10 @@ function openMenu() {
 
 function startGame() {
 	hide(document.getElementById("menu"));
-	startup(1, 1);
+	startup(1, 2);
 }
 
 function startMulti() {
 	hide(document.getElementById("menu"));
-	startup(2, 1);
+	startup(2, 2);
 }

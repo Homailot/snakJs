@@ -1,3 +1,7 @@
+var auxOb;
+var auxBordL, auxBordR, auxBordB, auxBordT;
+
+
 function Level(obstacles, borderTop, borderRight, borderBot, borderLeft, p1SX, p1SY, p2SX, p2SY) {
 	this.obstacles=obstacles;
 
@@ -75,6 +79,12 @@ function changeLvl(lvl) {
 		case 1:
 			auxOb=false;
 			auxBordT=true; auxBordR=true; auxBordB=true; auxBordL=true;
+			p1SX=3*gridX; p1SY=Math.floor(Math.floor((areaJogo.canvas.height-140)/gridY)/2)*gridY
+			p2SX=areaJogo.canvas.width-(3*gridX); p2SY=p1SY;
+			return new Level(auxOb, auxBordT, auxBordR, auxBordB, auxBordL);
+		case 2:
+			auxOb = []; auxOb.push(new Obstacle(Math.floor(Math.floor((areaJogo.canvas.width)/gridX)/2)*gridX, 0, gridX, areaJogo.canvas.height));
+			auxBordT=true; auxBordR=false; auxBordB=true; auxBordL=false;
 			p1SX=3*gridX; p1SY=Math.floor(Math.floor((areaJogo.canvas.height-140)/gridY)/2)*gridY
 			p2SX=areaJogo.canvas.width-(3*gridX); p2SY=p1SY;
 			return new Level(auxOb, auxBordT, auxBordR, auxBordB, auxBordL);
