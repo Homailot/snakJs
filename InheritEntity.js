@@ -295,6 +295,9 @@ function Edible(x, y, type){
 	} else if(this.Type==1){
 		this.Color="#FF008A";
 		this.Value=30;
+	} else if(this.Type==2) {
+		this.Color="#03E1DE";
+		this.Value=30;
 	}
 }
 

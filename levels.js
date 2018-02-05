@@ -88,5 +88,13 @@ function changeLvl(lvl) {
 			p1SX=3*gridX; p1SY=Math.floor(Math.floor((areaJogo.canvas.height-140)/gridY)/2)*gridY
 			p2SX=areaJogo.canvas.width-(3*gridX); p2SY=p1SY;
 			return new Level(auxOb, auxBordT, auxBordR, auxBordB, auxBordL);
+		case 3:
+			auxOb= []; auxOb.push(new Obstacle(Math.floor(Math.floor((areaJogo.canvas.width)/gridX)/2)*gridX, 0, gridX, areaJogo.canvas.height));
+			auxOb.push(new Obstacle(0, Math.floor(Math.floor((areaJogo.canvas.height-140)/gridY)/2)*gridY, areaJogo.canvas.width, gridY));
+			auxBordT=false; auxBordR=false; auxBordB=false; auxBordL=false;
+			p1SX=3*gridX; p1SY= ((areaJogo.canvas.height-140) - (2*gridY));
+			console.log(p1SY)
+			p2SX=areaJogo.canvas.width-(3*gridX); p2SY=0+2*gridX;
+			return new Level(auxOb, auxBordT, auxBordR, auxBordB, auxBordL);
 	}
 }

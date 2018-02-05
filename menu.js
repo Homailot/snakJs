@@ -64,10 +64,10 @@ function openLvls() {
 function switchLvl(l) {
 	switch(l){
 		case 1:
-			selectedLvl=selectedLvl+1>2?0:selectedLvl+1;
+			selectedLvl=selectedLvl+1>3?0:selectedLvl+1;
 			break;
 		case -1:
-			selectedLvl=selectedLvl-1<0?2:selectedLvl-1;
+			selectedLvl=selectedLvl-1<0?3:selectedLvl-1;
 			break;
 	}
 

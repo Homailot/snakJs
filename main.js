@@ -2,10 +2,12 @@
 var bg= new Image();
 var menu_1_s= new Image();
 var scoreImg= new Image();
+var logo = new Image();
 menu_1.src="menu_1.fw.png";
 bg.src="naom_58b44e8732feb.jpg";
 menu_1_s.src="Menu_1_select.fw.png";
 scoreImg.src="score.fw.png";
+logo.src="Untitled-1.fw.png";
 
 var tamJogador = [];
 var tamJogador2 = [];
@@ -15,7 +17,7 @@ var caudasNasc= [0, 0];
 var curEdibles = [];
 var cntComida= [0, 0];
 var origFrame = [];
-var score=0;
+var score= [0, 0];
 var speedFlag= [0, 0];
 var startedGame=0;
 var loadedLvls = [];
@@ -33,7 +35,7 @@ function startup(type, l){
 	curEdibles = [];
 	cntComida= [0, 0];
 	origFrame = [];
-	score=0;
+	score=[0, 0];
 	speedFlag= [0, 0];
 	loadedLvls = [];
 	win = 0;
@@ -119,7 +121,7 @@ function startup(type, l){
 
 		}, false);
 
-		tamJogador2.push(new JogadorBloco(p2SX, p2SY, "blue", -gridX/speedValX, 0));
+		tamJogador2.push(new JogadorBloco(p2SX, p2SY, "red", -gridX/speedValX, 0));
 		tamJogador2.push(new JogadorCauda(p2SX+gridX,  p2SY, "black", tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, tamJogador2[0].OldRotate, tamJogador2[0].speedMult));
 	}
 
@@ -255,11 +257,16 @@ function updateArea(){
 	areaJogo.ctx.fillStyle= "#568929";
 	areaJogo.ctx.fillRect(0, 0, cWidth,140);
 
-	areaJogo.ctx.drawImage(scoreImg, areaJogo.canvas.width-300, 0);
+	//areaJogo.ctx.drawImage(scoreImg, areaJogo.canvas.width-300, 0);
 	areaJogo.ctx.font= '52px arial';
-	//areaJogo.ctx.fontAlign="center";
+	areaJogo.ctx.textAlign="start";
 	areaJogo.ctx.fillStyle="white";
-	areaJogo.ctx.fillText(score, areaJogo.canvas.width-300+180, 140/2+19);
+	areaJogo.ctx.fillText("Score: " + score[0], 10, 140/2+19);
+
+	areaJogo.ctx.textAlign="end";
+	if(areaJogo.type==2)areaJogo.ctx.fillText("Score: "+score[i], areaJogo.canvas.width-10, 140/2+19)
+
+	areaJogo.ctx.drawImage(logo, areaJogo.canvas.width/2-171, 0, 342, 136);
 
 	areaJogo.myReq=requestAnimationFrame(updateArea);
 
@@ -277,10 +284,10 @@ function updateArea(){
 		else win=-1;
 	}
 
-	if(loadedLvls[0].borderRight!=false && tamJogador[0].checkCollide(loadedLvls[0].borderRight)) {stop(); win=2;}
-	if(loadedLvls[0].borderLeft!=false && tamJogador[0].checkCollide(loadedLvls[0].borderLeft)) {stop(); win=2;}
-	if(loadedLvls[0].borderTop!=false && tamJogador[0].checkCollide(loadedLvls[0].borderTop)) {stop(); win=2;}
-	if(loadedLvls[0].borderBot!=false && tamJogador[0].checkCollide(loadedLvls[0].borderBot)) {stop(); win=2;}
+	if(loadedLvls[0].borderRight!=false && tamJogador[0].checkCollide(loadedLvls[0].borderRight)) {stop(); win=areaJogo.type==2?2:-1;}
+	if(loadedLvls[0].borderLeft!=false && tamJogador[0].checkCollide(loadedLvls[0].borderLeft)) {stop(); win=areaJogo.type==2?2:-1;}
+	if(loadedLvls[0].borderTop!=false && tamJogador[0].checkCollide(loadedLvls[0].borderTop)) {stop(); win=areaJogo.type==2?2:-1;}
+	if(loadedLvls[0].borderBot!=false && tamJogador[0].checkCollide(loadedLvls[0].borderBot)) {stop(); win=areaJogo.type==2?2:-1;}
 
 	if(areaJogo.type==2) {
 		if(arrCollision(tamJogador2[0], tamJogador2, 3)){
@@ -306,6 +313,8 @@ function updateArea(){
 	}
 
 	if(startedGame==0) {
+		stop();
+
 		var d = document.createElement("div");
 		d.id='deathOverlay';
 		d.style.width=areaJogo.canvas.width + "px";
@@ -313,7 +322,8 @@ function updateArea(){
 
 		document.getElementById('container').insertBefore(d, document.getElementById('container').childNodes[0]);
 
-		if(win==-1) document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Perdeste!</h1>"
+		if(win==-1) document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Perdeste!</h1>";
+		else if(win==-2) document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Parabens! Ganhaste</h1>";
 		else document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Ganhou o Jogador "+ win+ "!</h1>";
 		
 
@@ -358,18 +368,21 @@ function spawn(type){
 }
 
 function eatFood(pos, player, num) {
-	score+=curEdibles[pos].Value;
+	var t;
+
+	score[num]+=curEdibles[pos].Value;
 
 	if(curEdibles[pos].Type==0) {
 		//Verifica se o jogador ganhou.
 		if(player.length+2>=Math.floor(areaJogo.canvas.width/gridX)*Math.floor((areaJogo.canvas.height-140)/gridY)) {
-			//MUDAR ISTO!!!!!!
+			win=-2; stop();
 		}
 
 		cntComida[num]++;
 		if(cntComida[num]%4==0) {
-			if(!curEdibles[1]) spawn(1);
-			setTimeout(function() {curEdibles.splice(1, 1)}, 5000);
+			spawn(1);
+
+			setTimeout(function() {curEdibles.splice(1, 1)}, 5000);	
 		}
 
 
@@ -388,6 +401,10 @@ function eatFood(pos, player, num) {
 		speedFlag[num]=1;
 		setTimeout(function() {speedFlag[num]=0}, 4000)
 		curEdibles.splice(1, 1);
+	/*} else if(curEdibles[pos].Type==2) {
+		player.splice(Math.floor(player.length/4)*3, Math.floor(player.length/4));
+		curEdibles.splice(2, 1);
+	}*/
 	}
 }
 
