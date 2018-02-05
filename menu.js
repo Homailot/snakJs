@@ -5,8 +5,8 @@ function show(el) {
 }
 
 function hide(el) {
-	el.style.backgroundImage = "none";
-	el.style.display = "hide";
+	//el.style.backgroundImage = "none";
+	el.style.display = "none";
 
 	/*var subs= el.getElementsByClassName("sub");
 
@@ -30,7 +30,7 @@ function openMenu() {
 }
 
 function openBtns() {
-	document.getElementById('menu').style.backgroundImage = "url(beautiful-snakes-wallpapers-%E2%80%AB5%E2%80%AC-%E2%80%AB%E2%80%AC-680x425.png)";
+	//document.getElementById('menu').style.backgroundImage = "url(beautiful-snakes-wallpapers-%E2%80%AB5%E2%80%AC-%E2%80%AB%E2%80%AC-680x425.png)";
 
 	document.getElementById("menu").innerHTML="<img src='Untitled-1.fw.png'>"
 	document.getElementById("menu").innerHTML+="<span id='butPlayer' class='sub' onclick='startGame(1);'></span>"

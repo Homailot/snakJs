@@ -306,6 +306,10 @@ function updateArea(){
 			stop(); win=1;
 		}
 
+		if(tamJogador[0].checkCollide(tamJogador2[0])) {
+			stop(); win=0;
+		}
+
 		if(loadedLvls[0].borderRight!=false && tamJogador2[0].checkCollide(loadedLvls[0].borderRight)) {stop(); win=1;}
 		if(loadedLvls[0].borderLeft!=false && tamJogador2[0].checkCollide(loadedLvls[0].borderLeft)) {stop(); win=1;}
 		if(loadedLvls[0].borderTop!=false && tamJogador2[0].checkCollide(loadedLvls[0].borderTop)) {stop(); win=1;}
@@ -322,9 +326,14 @@ function updateArea(){
 
 		document.getElementById('container').insertBefore(d, document.getElementById('container').childNodes[0]);
 
-		if(win==-1) document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Perdeste!</h1>";
-		else if(win==-2) document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Parabens! Ganhaste</h1>";
-		else document.getElementById("deathOverlay").innerHTML="<h1 id='lvlShow'>Ganhou o Jogador "+ win+ "!</h1>";
+		if(win==-1) document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Perdeste!</h1>";
+		else if(win==-2) document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Parabens! Ganhaste</h1>";
+		else if(win==0) {
+			if(score[0]>score[1]) document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador 1!</h1>";
+			else if(score[1]>score[0]) document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador 2!</h1>";
+			else document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Empate!</h1>";
+		}
+		else document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador "+ win+ "!</h1>";
 		
 
 		document.getElementById("deathOverlay").innerHTML+="<span id='exit' onclick='openMenu();'></span>";

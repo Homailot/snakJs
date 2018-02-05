@@ -3,7 +3,6 @@
 <head>
 	<title>Jogo Snake</title>
 	<link rel="icon" href="Blackvariant-Button-Ui-Requests-13-Snake.ico">
-	<!--<img src="6da17dc320f06b1a191f6d3270ba8a4b--oreos-online-games.jpg" >!-->
 	<style type="text/css">
 		body, html {
 			width:  100%;
@@ -13,20 +12,22 @@
 			padding: 0;
 		}
 		canvas{
-			position: absolute;
+			position: relative;
 			z-index: 1;
 			display: block;
+			margin: auto;
 		}
 
 		#container{
 			position: relative;
 			height: 100%;
+			text-align: center;
 		}
 		#menu{
 			width: 100%;
 			height:100%;
 			position: absolute;
-			background-image: url("beautiful-snakes-wallpapers-%E2%80%AB5%E2%80%AC-%E2%80%AB%E2%80%AC-680x425.png");
+			background-image: url("back.png");
 			background-size: 100% 100%;
 			background-repeat: no-repeat;
 			text-align: center;
@@ -51,6 +52,7 @@
 
 		#butPlayer:hover {
 			background-image: url("Menu_1_select.fw.png");
+
 		}
 
 		#butMulti {
@@ -68,6 +70,7 @@
 			height: 75px;	
 			bottom: 10px;
 			right: 10px;
+			float: left;
 		}
 
 		#lvl:hover {
@@ -90,9 +93,19 @@
 		#exit {
 			background-image: url("menu_exit.fw.png");	
 			right: 10px;
+			top: 35%;
 		}
 
 		#lvlShow {
+			font-family: arial;
+			font-size: 60px;
+			color: white;
+			float: left;
+			position: relative;
+			top: 15%;
+		}
+
+		#win {
 			font-family: arial;
 			font-size: 60px;
 			color: white;
