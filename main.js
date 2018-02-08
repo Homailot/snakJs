@@ -3,11 +3,11 @@ var bg= new Image();
 var menu_1_s= new Image();
 var scoreImg= new Image();
 var logo = new Image();
-menu_1.src="menu_1.fw.png";
-bg.src="naom_58b44e8732feb.jpg";
-menu_1_s.src="Menu_1_select.fw.png";
-scoreImg.src="score.fw.png";
-logo.src="Untitled-1.fw.png";
+menu_1.src="Media/Images/menu_1.fw.png";
+bg.src="Media/Images/naom_58b44e8732feb.jpg";
+menu_1_s.src="Media/Images/Menu_1_select.fw.png";
+scoreImg.src="Media/Images/score.fw.png";
+logo.src="Media/Images/Untitled-1.fw.png";
 
 var tamJogador = [];
 var tamJogador2 = [];
@@ -323,6 +323,7 @@ function updateArea(){
 		d.id='deathOverlay';
 		d.style.width=areaJogo.canvas.width + "px";
 		d.style.height=areaJogo.canvas.height + "px";d.style.display = 'block';
+		d.style.margin= "auto";
 
 		document.getElementById('container').insertBefore(d, document.getElementById('container').childNodes[0]);
 

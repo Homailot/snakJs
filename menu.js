@@ -32,7 +32,7 @@ function openMenu() {
 function openBtns() {
 	//document.getElementById('menu').style.backgroundImage = "url(beautiful-snakes-wallpapers-%E2%80%AB5%E2%80%AC-%E2%80%AB%E2%80%AC-680x425.png)";
 
-	document.getElementById("menu").innerHTML="<img src='Untitled-1.fw.png'>"
+	document.getElementById("menu").innerHTML="<img src='Media/Images/Untitled-1.fw.png'>"
 	document.getElementById("menu").innerHTML+="<span id='butPlayer' class='sub' onclick='startGame(1);'></span>"
 	document.getElementById("menu").innerHTML+="<span id='butMulti' class='sub' onclick='startGame(2);'></span>"
 	document.getElementById("menu").innerHTML+="<span id='lvl' onclick='openLvls();'></span>"
