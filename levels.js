@@ -93,7 +93,6 @@ function changeLvl(lvl) {
 			auxOb.push(new Obstacle(0, Math.floor(Math.floor((areaJogo.canvas.height-140)/gridY)/2)*gridY, areaJogo.canvas.width, gridY));
 			auxBordT=false; auxBordR=false; auxBordB=false; auxBordL=false;
 			p1SX=3*gridX; p1SY= ((areaJogo.canvas.height-140) - (2*gridY));
-			console.log(p1SY)
 			p2SX=areaJogo.canvas.width-(3*gridX); p2SY=0+2*gridX;
 			return new Level(auxOb, auxBordT, auxBordR, auxBordB, auxBordL);
 	}
