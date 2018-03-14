@@ -3,6 +3,32 @@ var bg= new Image();
 var menu_1_s= new Image();
 var scoreImg= new Image();
 var logo = new Image();
+var snake = {
+	cabecaU: new Image(),
+	cabecaD: new Image(),
+	cabecaL: new Image(),
+	cabecaR: new Image(),
+	corpoU: new Image(),
+	corpoD: new Image(),
+	corpoL: new Image(),
+	corpoR: new Image(),
+	caudaU: new Image(),
+	caudaD: new Image(),
+	caudaL: new Image(),
+	caudaR: new Image()
+};
+snake.cabecaU.src= "Media/Images/cabecaU.fw.png";
+snake.cabecaD.src="Media/Images/cabecaD.fw.png";
+snake.cabecaL.src= "Media/Images/cabecaL.fw.png";
+snake.cabecaR.src= "Media/Images/cabecaR.fw.png";
+snake.corpoU.src="Media/Images/corpoU.fw.png";
+snake.corpoD.src= "Media/Images/corpoD.fw.png";
+snake.corpoL.src= "Media/Images/corpoL.fw.png";
+snake.corpoR.src= "Media/Images/corpoR.fw.png";
+snake.caudaU.src= "Media/Images/menu_1.fw.png";
+snake.caudaD.src= "Media/Images/menu_1.fw.png";
+snake.caudaL.src= "Media/Images/menu_1.fw.png";
+snake.caudaR.src= "Media/Images/menu_1.fw.png";
 menu_1.src="Media/Images/menu_1.fw.png";
 bg.src="Media/Images/naom_58b44e8732feb.jpg";
 menu_1_s.src="Media/Images/Menu_1_select.fw.png";
@@ -59,31 +85,33 @@ function startup(type, l){
 	addEventListener("keydown", function(e) {
 			var i;
 
-			switch (e.keyCode) {
-				case 87:
-					if(tamJogador[0].SpeedY==0) {
-						tamJogador[0].TurnV=-1; tamJogador[0].TurnH=0;
-					}
+			if(tamJogador[0].TurnH==0 && tamJogador[0].TurnV==0) {
+				switch (e.keyCode) {
+					case 87:
+						if(tamJogador[0].SpeedY==0) {
+							tamJogador[0].TurnV=-1; tamJogador[0].TurnH=0;
+						}
 
-					break;
-				case 83:
-					if(tamJogador[0].SpeedY==0) {
-						tamJogador[0].TurnV=1; tamJogador[0].TurnH=0;
-					}
+						break;
+					case 83:
+						if(tamJogador[0].SpeedY==0) {
+							tamJogador[0].TurnV=1; tamJogador[0].TurnH=0;
+						}
 
-					break;
-				case 65:
-					if(tamJogador[0].SpeedX==0) {
-						tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
-					}
+						break;
+					case 65:
+						if(tamJogador[0].SpeedX==0) {
+							tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
+						}
 
-					break;
-				case 68:
-					if(tamJogador[0].SpeedX==0) {
-						tamJogador[0].TurnH=1; tamJogador[0].TurnV=0;
-					}
+						break;
+					case 68:
+						if(tamJogador[0].SpeedX==0) {
+							tamJogador[0].TurnH=1; tamJogador[0].TurnV=0;
+						}
 
-					break;
+						break;
+				}
 			}
 
 		}, false);
@@ -92,31 +120,33 @@ function startup(type, l){
 		addEventListener("keydown", function(e) {
 			var i;
 
-			switch (e.keyCode) {
-				case 38:
-					if(tamJogador2[0].SpeedY==0) {
-						tamJogador2[0].TurnV=-1; tamJogador2[0].TurnH=0;
-					}
+			if(tamJogador2[0].TurnH==0 && tamJogador2[0].TurnV==0) {
+				switch (e.keyCode) {
+					case 38:
+						if(tamJogador2[0].SpeedY==0) {
+							tamJogador2[0].TurnV=-1; tamJogador2[0].TurnH=0;
+						}
 
-					break;
-				case 40:
-					if(tamJogador2[0].SpeedY==0) {
-						tamJogador2[0].TurnV=1; tamJogador2[0].TurnH=0;
-					}
+						break;
+					case 40:
+						if(tamJogador2[0].SpeedY==0) {
+							tamJogador2[0].TurnV=1; tamJogador2[0].TurnH=0;
+						}
 
-					break;
-				case 37:
-					if(tamJogador2[0].SpeedX==0) {
-						tamJogador2[0].TurnH=-1; tamJogador2[0].TurnV=0;
-					}
+						break;
+					case 37:
+						if(tamJogador2[0].SpeedX==0) {
+							tamJogador2[0].TurnH=-1; tamJogador2[0].TurnV=0;
+						}
 
-					break;
-				case 39:
-					if(tamJogador2[0].SpeedX==0) {
-						tamJogador2[0].TurnH=1; tamJogador2[0].TurnV=0;
-					}
+						break;
+					case 39:
+						if(tamJogador2[0].SpeedX==0) {
+							tamJogador2[0].TurnH=1; tamJogador2[0].TurnV=0;
+						}
 
-					break;
+						break;
+				}
 			}
 
 		}, false);
