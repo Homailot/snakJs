@@ -36,6 +36,7 @@ function openBtns() {
 	document.getElementById("menu").innerHTML+="<span id='butPlayer' class='sub' onclick='startGame(1);'></span>"
 	document.getElementById("menu").innerHTML+="<span id='butMulti' class='sub' onclick='startGame(2);'></span>"
 	document.getElementById("menu").innerHTML+="<span id='lvl' onclick='openLvls();'></span>"
+	document.getElementById("menu").innerHTML+="<a href='score.php' id='tbl'></a>"
 	
 	var subs= document.getElementById("menu").getElementsByClassName("sub");
 
@@ -57,8 +58,9 @@ function openLvls() {
 	document.getElementById("menu").innerHTML="<span id='leftAr' onclick='switchLvl(1);'></span>";
 	document.getElementById("menu").innerHTML+="<span id='rightAr' onclick='switchLvl(-1);'></span>";
 	document.getElementById("menu").innerHTML+="<span id='exit' onclick='openBtns();'></span>";
-	document.getElementById("menu").innerHTML+="<h1 id='lvlShow'></h1>"
+	document.getElementById("menu").innerHTML+="<p id='lvlShow'></p>"
 	document.getElementById("lvlShow").innerHTML="Nivel: " + selectedLvl;
+	document.getElementById("menu").innerHTML+="<img id='preview' src='Media/Images/Lvl"+selectedLvl +".png'>"
 }
 
 function switchLvl(l) {
@@ -70,6 +72,8 @@ function switchLvl(l) {
 			selectedLvl=selectedLvl-1<0?3:selectedLvl-1;
 			break;
 	}
+
+	document.getElementById("preview").src="Media/Images/Lvl"+selectedLvl+".png";
 
 	document.getElementById("lvlShow").innerHTML="Nivel: " + selectedLvl;
 }

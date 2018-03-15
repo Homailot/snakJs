@@ -288,7 +288,7 @@ function updateArea(){
 	areaJogo.ctx.fillRect(0, 0, cWidth,140);
 
 	//areaJogo.ctx.drawImage(scoreImg, areaJogo.canvas.width-300, 0);
-	areaJogo.ctx.font= '52px arial';
+	areaJogo.ctx.font= '52px Open Sans';
 	areaJogo.ctx.textAlign="start";
 	areaJogo.ctx.fillStyle="white";
 	areaJogo.ctx.fillText("Score: " + score[0], 10, 140/2+19);
@@ -350,6 +350,7 @@ function updateArea(){
 		stop();
 
 		var d = document.createElement("div");
+		var finalScore;
 		d.id='deathOverlay';
 		d.style.width=areaJogo.canvas.width + "px";
 		d.style.height=areaJogo.canvas.height + "px";d.style.display = 'block';
@@ -357,39 +358,54 @@ function updateArea(){
 
 		document.getElementById('container').insertBefore(d, document.getElementById('container').childNodes[0]);
 
-		if(win==-1) document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Perdeste!</h1>";
-		else if(win==-2) document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Parabens! Ganhaste</h1>";
+		if(win==-1) {
+			document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Perdeste!</h1>"; finalScore=score[0];
+		} 
+		else if(win==-2) {
+			document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Parabens! Ganhaste</h1>"; finalScore=score[0];
+		} 
 		else if(win==0) {
-			if(score[0]>score[1]) document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador 1!</h1>";
-			else if(score[1]>score[0]) document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador 2!</h1>";
+			if(score[0]>score[1]) {
+				document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador 1!</h1>";	
+			} 
+			else if(score[1]>score[0]) {
+				document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador 2!</h1>";
+			} 
 			else document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Empate!</h1>";
 		}
-		else document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador "+ win+ "!</h1>";
-		
-		var form = document.createElement("form");
-		form.action="scores.php";
-		form.method="post";
-		
-		var lbl=document.createElement("label");
-		lbl.innerHTML="Nome :";
-		
-		var input= document.createElement("input");
-		input.type="text";
-		input.name="nome";
-		
-		var subt= document.createElement("input");
-		subt.type="submit";
-		subt.name="sub";
-		subt.value="Submeter!";
-		
-		form.appendChild(lbl); form.appendChild(input); form.appendChild(subt);
-		document.getElementById("deathOverlay").appendChild(form);
-		
-		//var form = "<form action='scores.php' method='post'><label>Nome: </label><input type='text' name='nome'><input type='submit' name='sub' value='Submeter!'></form>";
-		
-		document.getElementById("deathOverlay").innerHTML+=form;
-		
+		else {
+			document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador "+ win + "!</h1>";
+		} 
 
+		if(win==-1 || win==-2) {
+			var form = document.createElement("form");
+			form.setAttribute("action", "input.php");
+			form.setAttribute("method", "post");
+			form.name="form";
+			
+			var lbl=document.createElement("label");
+			lbl.innerHTML="Nome :";
+			
+			var input= document.createElement("input");
+			input.setAttribute("type", "text");
+			input.setAttribute("name", "nome");
+			input.setAttribute("value", "Anónimo");
+			input.setAttribute("required", "required");
+
+			var scoreI = document.createElement("input");
+			scoreI.type="hidden";
+			scoreI.name="score";
+			scoreI.value=finalScore;
+			
+			var subt= document.createElement("input");
+			subt.setAttribute("type", "submit");
+			subt.setAttribute("name", "subt");
+			subt.setAttribute("value", "Submeter!");
+			
+			form.appendChild(lbl); form.appendChild(input); form.appendChild(scoreI); form.appendChild(subt);
+			document.getElementById("deathOverlay").appendChild(form);
+		}
+		
 		document.getElementById("deathOverlay").innerHTML+="<span id='exit' onclick='openMenu();'></span>";
 		document.getElementById("exit").style.left = areaJogo.canvas.width/2-200 + "px"; document.getElementById("exit").style.bottom = '10px'
 	}

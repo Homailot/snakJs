@@ -3,7 +3,51 @@
 <head>
 	<title>Jogo Snake</title>
 	<link rel="icon" href="Media/Images/Blackvariant-Button-Ui-Requests-13-Snake.ico">
+	<link href="https://fonts.googleapis.com/css?family=Noto+Sans|Open+Sans" rel="stylesheet">
+	<meta charset charset=UTF-8>
 	<style type="text/css">
+		*{
+			font-family: 'Open Sans', sans-serif;
+		}
+
+		label{
+			color: white;
+			font-weight: bold;
+			font-size: 20px;
+			margin-right: 5px;
+		}
+
+		form{
+			background-color: #3CC774;
+			border-radius: 10px;
+			width: 30%;
+			margin: auto;
+			padding: 15px;
+		}
+
+		input {
+			border: none;
+			color: white;
+			padding: 5px;
+			font-weight: bold;
+			border-radius: 5px;
+			background-color: #2A8B4C;
+			margin-left: 5px;
+		}
+
+		#tbl{
+			background-image: url("Media/Images/Menu_tbl.fw.png");
+			position: absolute;
+			bottom: 10px;
+			left: 10px;
+			width: 300px;
+			height: 75px;
+		}
+
+		#tbl:hover{
+			background-image: url("Media/Images/Menu_tbl_select.fw.png");
+		}
+
 		body, html {
 			width:  100%;
   			height: 100%;
@@ -20,6 +64,7 @@
 		
 		form{
 			color: black;
+			z-index: 2;
 		}
 
 		#container{
@@ -39,7 +84,7 @@
 			z-index: 1;
 		}
 
-		span{
+		span, a{
 			background-size: 100% 100%;
 			position: absolute;
 			width: 400px;
@@ -47,6 +92,20 @@
 			z-index: 2;
 			display: block;
 			cursor: pointer;
+		}
+
+		p{
+			font-weight: bold;
+			font-size: 20px;
+		}
+
+		img#preview{
+			width: 50%;
+			bottom: 40%;
+			right: 10%;
+			position: absolute;
+			border: 2px solid #176334;
+			border-radius: 10px;
 		}
 
 		#butPlayer{
@@ -97,11 +156,10 @@
 		#exit {
 			background-image: url("Media/Images/Menu_exit.fw.png");	
 			right: 10px;
-			
 		}
 
 		#lvlShow {
-			font-family: arial;
+			font-family: 'Open Sans', sans-serif;
 			font-size: 60px;
 			color: white;
 			float: left;
@@ -110,7 +168,7 @@
 		}
 
 		#win {
-			font-family: arial;
+			font-family: 'Open Sans', sans-serif;
 			font-size: 60px;
 			color: white;
 		}
@@ -128,7 +186,7 @@
 
 	</style>
 </head>
-<body onload="openMenu();" onmousedown="return false;">
+<body onload="openMenu();" onmousedown="">
 	<div id="menu">
 		<!--<span id="butPlayer" class="sub"></span>
 		<span id="butMulti" class="sub"></span>!-->
