@@ -366,6 +366,29 @@ function updateArea(){
 		}
 		else document.getElementById("deathOverlay").innerHTML="<h1 id='win'>Ganhou o Jogador "+ win+ "!</h1>";
 		
+		var form = document.createElement("form");
+		form.action="scores.php";
+		form.method="post";
+		
+		var lbl=document.createElement("label");
+		lbl.innerHTML="Nome :";
+		
+		var input= document.createElement("input");
+		input.type="text";
+		input.name="nome";
+		
+		var subt= document.createElement("input");
+		subt.type="submit";
+		subt.name="sub";
+		subt.value="Submeter!";
+		
+		form.appendChild(lbl); form.appendChild(input); form.appendChild(subt);
+		document.getElementById("deathOverlay").appendChild(form);
+		
+		//var form = "<form action='scores.php' method='post'><label>Nome: </label><input type='text' name='nome'><input type='submit' name='sub' value='Submeter!'></form>";
+		
+		document.getElementById("deathOverlay").innerHTML+=form;
+		
 
 		document.getElementById("deathOverlay").innerHTML+="<span id='exit' onclick='openMenu();'></span>";
 		document.getElementById("exit").style.left = areaJogo.canvas.width/2-200 + "px"; document.getElementById("exit").style.bottom = '10px'
