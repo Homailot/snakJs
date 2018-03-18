@@ -16,18 +16,16 @@ function Entity(x, y){
 //se metesse no construtor ele estaria sempre a criar funcoes novas enquanto se meter no prototype (como o prototype de um construtor e "pai" dele (engloba-o))
 //cria uma vez e nunca mais cria.
 Entity.prototype.update = function(){
-	areaJogo.ctx.fillStyle = this.Color;
-
-	if(this.X+this.Width>areaJogo.canvas.width) areaJogo.ctx.fillRect(-1, this.Y-1, (this.X+this.Width)-areaJogo.canvas.width+1, this.Height+1);
-	else if(this.X<0) areaJogo.ctx.fillRect(areaJogo.canvas.width+this.X-1, this.Y-1, this.Width, this.Height+1);
-	else if(this.Y+this.Height>areaJogo.canvas.height) areaJogo.ctx.fillRect(this.X-1, 139, this.Width+1, this.Y+this.Height-areaJogo.canvas.height+1);
-	else if(this.Y<140) areaJogo.ctx.fillRect(this.X-1, areaJogo.canvas.height+(this.Y-140)-1, this.Width+1, this.Height+1);
+	if(this.X+this.Width>areaJogo.canvas.width) areaJogo.ctx.drawImage(this.Img, -1, this.Y-1, (this.X+this.Width)-areaJogo.canvas.width+1, this.Height+1);
+	else if(this.X<0) areaJogo.ctx.drawImage(this.Img, areaJogo.canvas.width+this.X-1, this.Y-1, this.Width, this.Height+1);
+	else if(this.Y+this.Height>areaJogo.canvas.height) areaJogo.ctx.drawImage(this.Img, this.X-1, 139, this.Width+1, this.Y+this.Height-areaJogo.canvas.height+1);
+	else if(this.Y<140) areaJogo.ctx.drawImage(this.Img, this.X-1, areaJogo.canvas.height+(this.Y-140)-1, this.Width+1, this.Height+1);
 	
-	areaJogo.ctx.fillRect(this.X-1, this.Y-1, this.Width+1, this.Height+1);
+	areaJogo.ctx.drawImage(this.Img, this.X-1, this.Y-1, this.Width+1, this.Height+1);
 };
 
 
-function JogadorBloco(x, y, color, speedX, speedY){
+function JogadorBloco(x, y, img, speedX, speedY, type){
 	//Vai buscar o x, o y e o width do Entity, com o x, y defenidos NESTE CONSTRUTOR como PARAMETROS do construtor acima, para ele nos devolver as variaveis X, Y Width e Height
 	Entity.call(this, x, y);
 
@@ -36,12 +34,15 @@ function JogadorBloco(x, y, color, speedX, speedY){
 	this.OldSpeedY=speedY;
 	this.SpeedX=speedX;
 	this.SpeedY=speedY;
-	this.Color = color;
+	//this.Color = color;
+	this.Img=img;
+	this.BImg=img;
 	this.TurnH = 0;
 	this.TurnV = 0;
 	this.Angle = 0;
 	this.OldAngleMult;
 	this.OldRotate = RotatingEnum.NOT;
+	this.Type=type;
 }
 //Basicamente, o prototype(onde estão gravadas as funcoes e isso)do jogador bloco, sao feitas iguais aquelas do entity
 JogadorBloco.prototype= Object.create(Entity.prototype);
@@ -53,6 +54,7 @@ JogadorBloco.prototype.turn = function(){
 	if((this.Y-140)%(gridY)==0 && this.X%(gridX)==0){
 		this.OldRotate = RotatingEnum.NOT;
 		this.OldSpeedY = this.SpeedY; this.OldSpeedX=this.SpeedX;
+		console.log("x:"+this.OldSpeedX); console.log("y:"+this.OldSpeedY);
 
 		/*if((this.TurnH>0 && this.OldSpeedY>0) || (this.TurnV>0 && this.OldSpeedX>0)){
 			this.OldRotate = RotatingEnum.RIGHTBOTTOM;
@@ -68,6 +70,10 @@ JogadorBloco.prototype.turn = function(){
 			this.SpeedX=gridX*this.TurnH/speedValX; this.SpeedY=0;
 
 			if(this.TurnH>0 && (this.OldSpeedX!=0 || this.OldSpeedY!=0)) {
+				if(this.Type==1) this.Img=snake.cabecaR;
+				else if(this.Type==2) this.Img=snake.cabecaR2;
+				this.BImg=0;
+
 				if(this.OldSpeedY>0){
 					this.OldRotate = RotatingEnum.RIGHTBOTTOM; //Negativo
 					this.Angle-=90;
@@ -80,6 +86,10 @@ JogadorBloco.prototype.turn = function(){
 			}
 			
 			else{
+				if(this.Type==1) this.Img=snake.cabecaL;
+				else if(this.Type==2) this.Img=snake.cabecaL2;
+				this.BImg=1;
+
 				if(this.OldSpeedY>0) {
 					this.OldRotate= RotatingEnum.LEFTBOTTOM; //Positivo
 					this.OldAngleMult=1;
@@ -95,6 +105,10 @@ JogadorBloco.prototype.turn = function(){
 			this.SpeedY=gridY/speedValY*this.TurnV; this.SpeedX=0;
 
 			if(this.TurnV>0&& (this.OldSpeedX!=0 || this.OldSpeedY!=0)) {
+				if(this.Type==1) this.Img=snake.cabecaD;
+				else if(this.Type==2) this.Img=snake.cabecaD2;
+				this.BImg=2;
+
 				if(this.OldSpeedX>0) {
 					this.OldRotate= RotatingEnum.RIGHTBOTTOM; // Positivo
 					this.OldAngleMult=1;
@@ -105,6 +119,9 @@ JogadorBloco.prototype.turn = function(){
 				} 
 			}
 			else {
+				if(this.Type==1) this.Img=snake.cabecaU;
+				else if(this.Type==2) this.Img=snake.cabecaU2;
+				this.BImg=3;
 			
 				if(this.OldSpeedX>0) {
 					this.OldRotate= RotatingEnum.RIGHTTOP; //Negativo
@@ -145,9 +162,9 @@ JogadorBloco.prototype.checkCollide = function(objeto){
 };
 
 
-function JogadorCauda(x, y, color, speedX, speedY, rotation, speedMult){
-	JogadorBloco.call(this, x, y, color, speedX, speedY);
-
+function JogadorCauda(x, y,img, speedX, speedY, type, rotation, speedMult ){
+	JogadorBloco.call(this, x, y, img, speedX, speedY, type);
+	this.Img=img;
 	this.StopSpeedX=0;
 	this.StopSpeedY=0;
 	this.speedMult=speedMult;
@@ -219,6 +236,45 @@ JogadorCauda.prototype.followLast = function(arr, pos){
 	this.SpeedY=arr[pos-1].OldSpeedY;
 	this.AngleMult=arr[pos-1].OldAngleMult;
 	this.isRotating=arr[pos-1].OldRotate;
+	if(this.isRotating==RotatingEnum.NOT || this.OldRotate!=RotatingEnum.NOT) {
+		//console.log(arr[pos-1].OldSpeedX);
+		if(pos==arr.length-1){
+			if(arr[pos-1].OldSpeedX>0) {
+				if(this.Type==1) this.Img=snake.caudaR;
+				else if(this.Type==2) this.Img=snake.caudaR2;
+			}
+			else if(arr[pos-1].OldSpeedX<0) {
+				if(this.Type==1) this.Img=snake.caudaL;
+				else if(this.Type==2) this.Img=snake.caudaL2;
+			} 
+			else if(arr[pos-1].OldSpeedY>0) {
+				if(this.Type==1) this.Img=snake.caudaD;
+				else if(this.Type==2) this.Img=snake.caudaD2;
+			}
+			else if(arr[pos-1].OldSpeedY<0) {
+				if(this.Type==1) this.Img=snake.caudaU;
+				else if(this.Type==2) this.Img=snake.caudaU2;
+			}
+		} else {
+			if(arr[pos-1].OldSpeedX>0) {
+				if(this.Type==1) this.Img=snake.corpoR;
+				else if(this.Type==2) this.Img=snake.corpoR2;
+			} 
+			else if(arr[pos-1].OldSpeedX<0) {
+				if(this.Type==1) this.Img=snake.corpoL;
+				else if(this.Type==2) this.Img=snake.corpoL2;
+			}
+			else if(arr[pos-1].OldSpeedY>0) {
+				if(this.Type==1) this.Img=snake.corpoD;
+				else if(this.Type==2) this.Img=snake.corpoD2;
+			}
+			else if(arr[pos-1].OldSpeedY<0) {
+				if(this.Type==1) this.Img=snake.corpoU;
+				else if(this.Type==2) this.Img=snake.corpoU2;
+			}; 
+		}
+		
+	} 
 };
 
 JogadorCauda.prototype.update = function(){
@@ -232,7 +288,7 @@ JogadorCauda.prototype.update = function(){
 		areaJogo.ctx.translate(this.RotationCenterX-areaJogo.canvas.width, this.RotationCenterY);
 		areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
 		areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
-		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+		areaJogo.ctx.drawImage(this.Img, -1, -1, this.Width+1, this.Height+1);
 		areaJogo.ctx.restore();
 	} 
 	else if(this.OldX<=0) {
@@ -242,7 +298,7 @@ JogadorCauda.prototype.update = function(){
 		areaJogo.ctx.translate(this.RotationCenterX+areaJogo.canvas.width, this.RotationCenterY);
 		areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
 		areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
-		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+		areaJogo.ctx.drawImage(this.Img, -1, -1, this.Width+1, this.Height+1);
 		areaJogo.ctx.restore();
 	}
 	if(this.OldY+this.Height>=areaJogo.canvas.height) {
@@ -253,7 +309,7 @@ JogadorCauda.prototype.update = function(){
 		areaJogo.ctx.translate(this.RotationCenterX, this.RotationCenterY-areaJogo.canvas.height+140);
 		areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
 		areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
-		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+		areaJogo.ctx.drawImage(this.Img, -1, -1, this.Width+1, this.Height+1);
 		areaJogo.ctx.restore();
 	}
 	else if(this.OldY<=140) {
@@ -264,7 +320,7 @@ JogadorCauda.prototype.update = function(){
 		areaJogo.ctx.translate(this.RotationCenterX, this.RotationCenterY+areaJogo.canvas.height-140);
 		areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
 		areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
-		areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+		areaJogo.ctx.drawImage(this.Img, -1, -1, this.Width+1, this.Height+1);
 		areaJogo.ctx.restore();
 	}
 
@@ -273,7 +329,7 @@ JogadorCauda.prototype.update = function(){
 	areaJogo.ctx.translate(this.RotationCenterX, this.RotationCenterY);
 	areaJogo.ctx.rotate(this.Angle * Math.PI / 180);
 	areaJogo.ctx.translate(-this.RotationOffsetX, -this.RotationOffsetY);
-	areaJogo.ctx.fillRect(-1, -1, this.Width+1, this.Height+1);
+	areaJogo.ctx.drawImage(this.Img, -1, -1, this.Width+1, this.Height+1);
 	areaJogo.ctx.restore();
 
 	/*} else {
@@ -291,9 +347,9 @@ function Edible(x, y, type){
 	this.Type=type;
 	if(this.Type==0) {
 		this.Value=10;
-		this.Color="#FD1515";
+		this.Img=snake.corpoR;
 	} else if(this.Type==1){
-		this.Color="#FF008A";
+		this.Img=snake.corpoL;
 		this.Value=30;
 	} else if(this.Type==2) {
 		this.Color="#03E1DE";

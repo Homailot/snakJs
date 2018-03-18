@@ -15,7 +15,19 @@ var snake = {
 	caudaU: new Image(),
 	caudaD: new Image(),
 	caudaL: new Image(),
-	caudaR: new Image()
+	caudaR: new Image(),
+	cabecaU2: new Image(),
+	cabecaD2: new Image(),
+	cabecaL2: new Image(),
+	cabecaR2: new Image(),
+	corpoU2: new Image(),
+	corpoD2: new Image(),
+	corpoL2: new Image(),
+	corpoR2: new Image(),
+	caudaU2: new Image(),
+	caudaD2: new Image(),
+	caudaL2: new Image(),
+	caudaR2: new Image()
 };
 snake.cabecaU.src= "Media/Images/cabecaU.fw.png";
 snake.cabecaD.src="Media/Images/cabecaD.fw.png";
@@ -25,10 +37,22 @@ snake.corpoU.src="Media/Images/corpoU.fw.png";
 snake.corpoD.src= "Media/Images/corpoD.fw.png";
 snake.corpoL.src= "Media/Images/corpoL.fw.png";
 snake.corpoR.src= "Media/Images/corpoR.fw.png";
-snake.caudaU.src= "Media/Images/menu_1.fw.png";
-snake.caudaD.src= "Media/Images/menu_1.fw.png";
-snake.caudaL.src= "Media/Images/menu_1.fw.png";
-snake.caudaR.src= "Media/Images/menu_1.fw.png";
+snake.caudaU.src= "Media/Images/caudaU.fw.png";
+snake.caudaD.src= "Media/Images/caudaD.fw.png";
+snake.caudaL.src= "Media/Images/caudaL.fw.png";
+snake.caudaR.src= "Media/Images/caudaR.fw.png";
+snake.cabecaU2.src= "Media/Images/cabecaU2.fw.png";
+snake.cabecaD2.src="Media/Images/cabecaD2.fw.png";
+snake.cabecaL2.src= "Media/Images/cabecaL2.fw.png";
+snake.cabecaR2.src= "Media/Images/cabecaR2.fw.png";
+snake.corpoU2.src="Media/Images/corpoU2.fw.png";
+snake.corpoD2.src= "Media/Images/corpoD2.fw.png";
+snake.corpoL2.src= "Media/Images/corpoL2.fw.png";
+snake.corpoR2.src= "Media/Images/corpoR2.fw.png";
+snake.caudaU2.src= "Media/Images/caudaU2.fw.png";
+snake.caudaD2.src= "Media/Images/caudaD2.fw.png";
+snake.caudaL2.src= "Media/Images/caudaL2.fw.png";
+snake.caudaR2.src= "Media/Images/caudaR2.fw.png";
 menu_1.src="Media/Images/menu_1.fw.png";
 bg.src="Media/Images/naom_58b44e8732feb.jpg";
 menu_1_s.src="Media/Images/Menu_1_select.fw.png";
@@ -79,8 +103,8 @@ function startup(type, l){
 	/*var pY = Math.floor(Math.random()*Math.floor((window.innerHeight-140)/gridY));
 	var pX = Math.floor(Math.random()*Math.floor(window.innerWidth/gridX));*/
 
-	tamJogador.push(new JogadorBloco(p1SX, p1SY, "blue", gridX/speedValX, 0));
-	tamJogador.push(new JogadorCauda(p1SX-gridX,  p1SY, "black", tamJogador[0].SpeedX, tamJogador[0].SpeedY, tamJogador[0].OldRotate, tamJogador[0].speedMult));
+	tamJogador.push(new JogadorBloco(p1SX, p1SY, snake.cabecaR, gridX/speedValX, 0, 1));
+	tamJogador.push(new JogadorCauda(p1SX-gridX,  p1SY, snake.caudaR, tamJogador[0].SpeedX, tamJogador[0].SpeedY, 1, tamJogador[0].OldRotate, tamJogador[0].speedMult));
 
 	addEventListener("keydown", function(e) {
 			var i;
@@ -151,8 +175,8 @@ function startup(type, l){
 
 		}, false);
 
-		tamJogador2.push(new JogadorBloco(p2SX, p2SY, "red", -gridX/speedValX, 0));
-		tamJogador2.push(new JogadorCauda(p2SX+gridX,  p2SY, "black", tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, tamJogador2[0].OldRotate, tamJogador2[0].speedMult));
+		tamJogador2.push(new JogadorBloco(p2SX, p2SY, snake.cabecaL2, -gridX/speedValX, 0, 2));
+		tamJogador2.push(new JogadorCauda(p2SX+gridX,  p2SY, snake.caudaL2, tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, 2, tamJogador2[0].OldRotate, tamJogador2[0].speedMult));
 	}
 
 
@@ -500,7 +524,8 @@ function growTail(player, num) {
 		sX=player[player.length-1].StopSpeedX;
 		sY=player[player.length-1].StopSpeedY;
 
-		player.splice(player.length-1, 0, new JogadorCauda(player[player.length-1].X, player[player.length-1].Y-140, "black", sX, sY, player[player.length-1].OldRotate, player[player.length-1].speedMult));
+		if(player.length<=2) player.splice(player.length-1, 0, new JogadorCauda(player[player.length-1].X, player[player.length-1].Y-140, player[player.length-1].Img, sX, sY, num+1, player[player.length-1].OldRotate, player[player.length-1].speedMult));
+		else player.splice(player.length-1, 0, new JogadorCauda(player[player.length-1].X, player[player.length-1].Y-140, player[player.length-2].Img, sX, sY, num+1, player[player.length-1].OldRotate, player[player.length-1].speedMult));
 	}
 }
 

@@ -57,6 +57,7 @@
 		div.contain{
 			margin: auto;
 			text-align: center;
+
 		}
 
 		div.container{
@@ -64,6 +65,9 @@
 			width: 100%;
 			height: 100%;
 			overflow: hidden;
+			position: relative;
+			background-size: 100% 100%;
+			background-repeat: no-repeat;
 		}
 
 		#exit {
