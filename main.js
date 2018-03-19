@@ -3,6 +3,7 @@ var bg= new Image();
 var menu_1_s= new Image();
 var scoreImg= new Image();
 var logo = new Image();
+var wall= new Image();
 var snake = {
 	cabecaU: new Image(),
 	cabecaD: new Image(),
@@ -27,7 +28,9 @@ var snake = {
 	caudaU2: new Image(),
 	caudaD2: new Image(),
 	caudaL2: new Image(),
-	caudaR2: new Image()
+	caudaR2: new Image(),
+	e1: new Image(),
+	e2: new Image()
 };
 snake.cabecaU.src= "Media/Images/cabecaU.fw.png";
 snake.cabecaD.src="Media/Images/cabecaD.fw.png";
@@ -53,11 +56,14 @@ snake.caudaU2.src= "Media/Images/caudaU2.fw.png";
 snake.caudaD2.src= "Media/Images/caudaD2.fw.png";
 snake.caudaL2.src= "Media/Images/caudaL2.fw.png";
 snake.caudaR2.src= "Media/Images/caudaR2.fw.png";
+snake.e1.src="Media/Images/e1.fw.png"
+snake.e2.src="Media/Images/e2.fw.png"
 menu_1.src="Media/Images/menu_1.fw.png";
 bg.src="Media/Images/naom_58b44e8732feb.jpg";
 menu_1_s.src="Media/Images/Menu_1_select.fw.png";
 scoreImg.src="Media/Images/score.fw.png";
 logo.src="Media/Images/Untitled-1.fw.png";
+wall.src="Media/Images/wall.fw.png";
 
 var tamJogador = [];
 var tamJogador2 = [];
@@ -89,6 +95,7 @@ function startup(type, l){
 	speedFlag= [0, 0];
 	loadedLvls = [];
 	win = 0;
+	console.log(type);
 
 	areaJogo.beginGame(type);
 
@@ -106,74 +113,10 @@ function startup(type, l){
 	tamJogador.push(new JogadorBloco(p1SX, p1SY, snake.cabecaR, gridX/speedValX, 0, 1));
 	tamJogador.push(new JogadorCauda(p1SX-gridX,  p1SY, snake.caudaR, tamJogador[0].SpeedX, tamJogador[0].SpeedY, 1, tamJogador[0].OldRotate, tamJogador[0].speedMult));
 
-	addEventListener("keydown", function(e) {
-			var i;
-
-			if(tamJogador[0].TurnH==0 && tamJogador[0].TurnV==0) {
-				switch (e.keyCode) {
-					case 87:
-						if(tamJogador[0].SpeedY==0) {
-							tamJogador[0].TurnV=-1; tamJogador[0].TurnH=0;
-						}
-
-						break;
-					case 83:
-						if(tamJogador[0].SpeedY==0) {
-							tamJogador[0].TurnV=1; tamJogador[0].TurnH=0;
-						}
-
-						break;
-					case 65:
-						if(tamJogador[0].SpeedX==0) {
-							tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
-						}
-
-						break;
-					case 68:
-						if(tamJogador[0].SpeedX==0) {
-							tamJogador[0].TurnH=1; tamJogador[0].TurnV=0;
-						}
-
-						break;
-				}
-			}
-
-		}, false);
+	document.body.addEventListener("keydown", move1, false);
 
 	if(type==2) {
-		addEventListener("keydown", function(e) {
-			var i;
-
-			if(tamJogador2[0].TurnH==0 && tamJogador2[0].TurnV==0) {
-				switch (e.keyCode) {
-					case 38:
-						if(tamJogador2[0].SpeedY==0) {
-							tamJogador2[0].TurnV=-1; tamJogador2[0].TurnH=0;
-						}
-
-						break;
-					case 40:
-						if(tamJogador2[0].SpeedY==0) {
-							tamJogador2[0].TurnV=1; tamJogador2[0].TurnH=0;
-						}
-
-						break;
-					case 37:
-						if(tamJogador2[0].SpeedX==0) {
-							tamJogador2[0].TurnH=-1; tamJogador2[0].TurnV=0;
-						}
-
-						break;
-					case 39:
-						if(tamJogador2[0].SpeedX==0) {
-							tamJogador2[0].TurnH=1; tamJogador2[0].TurnV=0;
-						}
-
-						break;
-				}
-			}
-
-		}, false);
+		document.body.addEventListener("keydown", move2, false);
 
 		tamJogador2.push(new JogadorBloco(p2SX, p2SY, snake.cabecaL2, -gridX/speedValX, 0, 2));
 		tamJogador2.push(new JogadorCauda(p2SX+gridX,  p2SY, snake.caudaL2, tamJogador2[0].SpeedX, tamJogador2[0].SpeedY, 2, tamJogador2[0].OldRotate, tamJogador2[0].speedMult));
@@ -431,7 +374,9 @@ function updateArea(){
 		}
 		
 		document.getElementById("deathOverlay").innerHTML+="<span id='exit' onclick='openMenu();'></span>";
-		document.getElementById("exit").style.left = areaJogo.canvas.width/2-200 + "px"; document.getElementById("exit").style.bottom = '10px'
+		document.getElementById("exit").style.left = areaJogo.canvas.width/2-200 + "px"; document.getElementById("exit").style.bottom = '10px';
+		document.body.removeEventListener("keydown", move1);
+		if(areaJogo.type==2) document.body.removeEventListener("keydown", move2);
 	}
 }
 //Calculos matemeticos complicadíssimos para gerar a sorte um ponto a volta do jogador num range (so na largura) de 10 blocos da grelha.
@@ -561,4 +506,69 @@ function spawnCheck(right, left, down, up, obj) {
 	}
 
 	return 0;		
+}
+
+function move1(e) {
+	var i;
+	if(tamJogador[0].TurnH==0 && tamJogador[0].TurnV==0) {
+		switch (e.keyCode) {
+			case 87:
+				if(tamJogador[0].SpeedY==0) {
+					tamJogador[0].TurnV=-1; tamJogador[0].TurnH=0;
+				}
+
+				break;
+			case 83:
+				if(tamJogador[0].SpeedY==0) {
+					tamJogador[0].TurnV=1; tamJogador[0].TurnH=0;
+				}
+
+				break;
+			case 65:
+				if(tamJogador[0].SpeedX==0) {
+					tamJogador[0].TurnH=-1; tamJogador[0].TurnV=0;
+				}
+
+				break;
+			case 68:
+				if(tamJogador[0].SpeedX==0) {
+					tamJogador[0].TurnH=1; tamJogador[0].TurnV=0;
+				}
+
+				break;
+		}
+	}
+}
+
+function move2(e) {
+	var i;
+
+	if(tamJogador2[0].TurnH==0 && tamJogador2[0].TurnV==0) {
+		switch (e.keyCode) {
+			case 38:
+				if(tamJogador2[0].SpeedY==0) {
+					tamJogador2[0].TurnV=-1; tamJogador2[0].TurnH=0;
+				}
+
+				break;
+			case 40:
+				if(tamJogador2[0].SpeedY==0) {
+					tamJogador2[0].TurnV=1; tamJogador2[0].TurnH=0;
+				}
+
+				break;
+			case 37:
+				if(tamJogador2[0].SpeedX==0) {
+					tamJogador2[0].TurnH=-1; tamJogador2[0].TurnV=0;
+				}
+
+				break;
+			case 39:
+				if(tamJogador2[0].SpeedX==0) {
+					tamJogador2[0].TurnH=1; tamJogador2[0].TurnV=0;
+				}
+
+				break;
+		}
+	}
 }

@@ -25,7 +25,7 @@ Entity.prototype.update = function(){
 };
 
 
-function JogadorBloco(x, y, img, speedX, speedY, type){
+function JogadorBloco(x, y, img, speedX, speedY, t){
 	//Vai buscar o x, o y e o width do Entity, com o x, y defenidos NESTE CONSTRUTOR como PARAMETROS do construtor acima, para ele nos devolver as variaveis X, Y Width e Height
 	Entity.call(this, x, y);
 
@@ -42,7 +42,7 @@ function JogadorBloco(x, y, img, speedX, speedY, type){
 	this.Angle = 0;
 	this.OldAngleMult;
 	this.OldRotate = RotatingEnum.NOT;
-	this.Type=type;
+	this.T=t;
 }
 //Basicamente, o prototype(onde estão gravadas as funcoes e isso)do jogador bloco, sao feitas iguais aquelas do entity
 JogadorBloco.prototype= Object.create(Entity.prototype);
@@ -54,7 +54,6 @@ JogadorBloco.prototype.turn = function(){
 	if((this.Y-140)%(gridY)==0 && this.X%(gridX)==0){
 		this.OldRotate = RotatingEnum.NOT;
 		this.OldSpeedY = this.SpeedY; this.OldSpeedX=this.SpeedX;
-		console.log("x:"+this.OldSpeedX); console.log("y:"+this.OldSpeedY);
 
 		/*if((this.TurnH>0 && this.OldSpeedY>0) || (this.TurnV>0 && this.OldSpeedX>0)){
 			this.OldRotate = RotatingEnum.RIGHTBOTTOM;
@@ -70,8 +69,8 @@ JogadorBloco.prototype.turn = function(){
 			this.SpeedX=gridX*this.TurnH/speedValX; this.SpeedY=0;
 
 			if(this.TurnH>0 && (this.OldSpeedX!=0 || this.OldSpeedY!=0)) {
-				if(this.Type==1) this.Img=snake.cabecaR;
-				else if(this.Type==2) this.Img=snake.cabecaR2;
+				if(this.T==1) this.Img=snake.cabecaR;
+				else if(this.T==2) this.Img=snake.cabecaR2;
 				this.BImg=0;
 
 				if(this.OldSpeedY>0){
@@ -86,8 +85,8 @@ JogadorBloco.prototype.turn = function(){
 			}
 			
 			else{
-				if(this.Type==1) this.Img=snake.cabecaL;
-				else if(this.Type==2) this.Img=snake.cabecaL2;
+				if(this.T==1) this.Img=snake.cabecaL;
+				else if(this.T==2) this.Img=snake.cabecaL2;
 				this.BImg=1;
 
 				if(this.OldSpeedY>0) {
@@ -105,8 +104,8 @@ JogadorBloco.prototype.turn = function(){
 			this.SpeedY=gridY/speedValY*this.TurnV; this.SpeedX=0;
 
 			if(this.TurnV>0&& (this.OldSpeedX!=0 || this.OldSpeedY!=0)) {
-				if(this.Type==1) this.Img=snake.cabecaD;
-				else if(this.Type==2) this.Img=snake.cabecaD2;
+				if(this.T==1) this.Img=snake.cabecaD;
+				else if(this.T==2) this.Img=snake.cabecaD2;
 				this.BImg=2;
 
 				if(this.OldSpeedX>0) {
@@ -119,8 +118,8 @@ JogadorBloco.prototype.turn = function(){
 				} 
 			}
 			else {
-				if(this.Type==1) this.Img=snake.cabecaU;
-				else if(this.Type==2) this.Img=snake.cabecaU2;
+				if(this.T==1) this.Img=snake.cabecaU;
+				else if(this.T==2) this.Img=snake.cabecaU2;
 				this.BImg=3;
 			
 				if(this.OldSpeedX>0) {
@@ -162,8 +161,8 @@ JogadorBloco.prototype.checkCollide = function(objeto){
 };
 
 
-function JogadorCauda(x, y,img, speedX, speedY, type, rotation, speedMult ){
-	JogadorBloco.call(this, x, y, img, speedX, speedY, type);
+function JogadorCauda(x, y,img, speedX, speedY, t, rotation, speedMult ){
+	JogadorBloco.call(this, x, y, img, speedX, speedY, t);
 	this.Img=img;
 	this.StopSpeedX=0;
 	this.StopSpeedY=0;
@@ -240,37 +239,37 @@ JogadorCauda.prototype.followLast = function(arr, pos){
 		//console.log(arr[pos-1].OldSpeedX);
 		if(pos==arr.length-1){
 			if(arr[pos-1].OldSpeedX>0) {
-				if(this.Type==1) this.Img=snake.caudaR;
-				else if(this.Type==2) this.Img=snake.caudaR2;
+				if(this.T==1) this.Img=snake.caudaR;
+				else if(this.T==2) this.Img=snake.caudaR2;
 			}
 			else if(arr[pos-1].OldSpeedX<0) {
-				if(this.Type==1) this.Img=snake.caudaL;
-				else if(this.Type==2) this.Img=snake.caudaL2;
+				if(this.T==1) this.Img=snake.caudaL;
+				else if(this.T==2) this.Img=snake.caudaL2;
 			} 
 			else if(arr[pos-1].OldSpeedY>0) {
-				if(this.Type==1) this.Img=snake.caudaD;
-				else if(this.Type==2) this.Img=snake.caudaD2;
+				if(this.T==1) this.Img=snake.caudaD;
+				else if(this.T==2) this.Img=snake.caudaD2;
 			}
 			else if(arr[pos-1].OldSpeedY<0) {
-				if(this.Type==1) this.Img=snake.caudaU;
-				else if(this.Type==2) this.Img=snake.caudaU2;
+				if(this.T==1) this.Img=snake.caudaU;
+				else if(this.T==2) this.Img=snake.caudaU2;
 			}
 		} else {
 			if(arr[pos-1].OldSpeedX>0) {
-				if(this.Type==1) this.Img=snake.corpoR;
-				else if(this.Type==2) this.Img=snake.corpoR2;
+				if(this.T==1) this.Img=snake.corpoR;
+				else if(this.T==2) this.Img=snake.corpoR2;
 			} 
 			else if(arr[pos-1].OldSpeedX<0) {
-				if(this.Type==1) this.Img=snake.corpoL;
-				else if(this.Type==2) this.Img=snake.corpoL2;
+				if(this.T==1) this.Img=snake.corpoL;
+				else if(this.T==2) this.Img=snake.corpoL2;
 			}
 			else if(arr[pos-1].OldSpeedY>0) {
-				if(this.Type==1) this.Img=snake.corpoD;
-				else if(this.Type==2) this.Img=snake.corpoD2;
+				if(this.T==1) this.Img=snake.corpoD;
+				else if(this.T==2) this.Img=snake.corpoD2;
 			}
 			else if(arr[pos-1].OldSpeedY<0) {
-				if(this.Type==1) this.Img=snake.corpoU;
-				else if(this.Type==2) this.Img=snake.corpoU2;
+				if(this.T==1) this.Img=snake.corpoU;
+				else if(this.T==2) this.Img=snake.corpoU2;
 			}; 
 		}
 		
@@ -347,9 +346,9 @@ function Edible(x, y, type){
 	this.Type=type;
 	if(this.Type==0) {
 		this.Value=10;
-		this.Img=snake.corpoR;
+		this.Img=snake.e1;
 	} else if(this.Type==1){
-		this.Img=snake.corpoL;
+		this.Img=snake.e2;
 		this.Value=30;
 	} else if(this.Type==2) {
 		this.Color="#03E1DE";
@@ -370,7 +369,7 @@ function Obstacle(x, y, width, height){
 	this.Width=width;
 	this.Height=height;
 	this.SpeedX=0;
-	this.Color="#0E4402";
+	this.Img=wall;
 	this.SpeedY=0;
 }
 
